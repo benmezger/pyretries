@@ -7,7 +7,6 @@ import asyncio
 from typing import cast
 from retries.retry import Sleep, AsyncRetry, IsValueCondition
 
-
 _counter = -1
 
 

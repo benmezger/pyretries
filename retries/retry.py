@@ -4,10 +4,10 @@
 # Created at <2023-09-23 Sat 21:35>
 
 import abc
-import time
 import typing as t
 
-from retries.exceptions import RetryConditionError, RetryExaustedError
+from retries.exceptions import RetryConditionError
+from retries.stop import Stop
 
 ConditionT = t.TypeVar("ConditionT")
 ReturnT = t.TypeVar("ReturnT")
@@ -28,53 +28,6 @@ class IsValueCondition(Condition[ReturnT]):
         match = value == self.expected
         if not match:
             raise RetryConditionError(f"Expected value {self.expected} but got {value}")
-
-
-class Stop(abc.ABC):
-    @abc.abstractproperty
-    def should_stop(self) -> bool:
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    def maybe_apply(self) -> None:
-        raise NotImplementedError
-
-
-class StopAfterAttempt(Stop):
-    def __init__(self, attempts: int) -> None:
-        self.attempts = attempts
-        self.current_attempt = 0
-
-    @property
-    def should_stop(self) -> bool:
-        if self.current_attempt >= self.attempts:
-            return True
-        return False
-
-    def maybe_apply(self) -> None:
-        if self.should_stop:
-            raise RetryExaustedError from None
-        self.current_attempt += 1
-
-
-class Sleep(Stop):
-    def __init__(self, seconds: float, attempts: int = 1):
-        self.seconds = seconds
-        self.attempts = attempts
-        self.current_attempt = 0
-
-    @property
-    def should_stop(self) -> bool:
-        if self.current_attempt >= self.attempts:
-            return True
-        return False
-
-    def maybe_apply(self) -> None:
-        if self.should_stop:
-            raise RetryExaustedError from None
-
-        self.current_attempt += 1
-        time.sleep(self.seconds)
 
 
 class BaseRetry(abc.ABC, t.Generic[ReturnT]):

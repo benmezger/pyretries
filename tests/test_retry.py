@@ -8,8 +8,9 @@ from unittest.mock import patch
 
 import pytest
 
-from retries.exceptions import RetryConditionError, RetryExaustedError
-from retries.retry import AsyncRetry, IsValueCondition, Sleep, StopAfterAttempt
+from retries.exceptions import RetryExaustedError
+from retries.retry import AsyncRetry, IsValueCondition
+from retries.stop import Sleep, StopAfterAttempt
 
 
 @pytest.fixture

@@ -5,7 +5,8 @@
 
 import asyncio
 from typing import cast
-from retries.retry import StopAfterAttempt, AsyncRetry, IsValueCondition
+from retries.retry import AsyncRetry, IsValueCondition
+from retries.stop import StopAfterAttempt
 
 
 _counter = -1
