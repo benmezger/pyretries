@@ -5,7 +5,9 @@
 
 import asyncio
 from typing import cast
-from retries.retry import Sleep, AsyncRetry, IsValueCondition
+
+from retries.retry import AsyncRetry, IsValueCondition
+from retries.stop import Sleep
 
 _counter = -1
 
@@ -20,8 +22,7 @@ async def make_request() -> int:
 
 async def main():
     retry = AsyncRetry[int](
-        conditions=[IsValueCondition[int](expected=1)],
-        stop=Sleep(seconds=1, attempts=3),
+        stops=[Sleep[int](seconds=1, attempts=3)],
     )
 
     await retry(make_request)

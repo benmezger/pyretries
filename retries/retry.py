@@ -6,7 +6,7 @@
 import abc
 import typing as t
 
-from retries.exceptions import RetryConditionError
+from retries.exceptions import RetryConditionError, RetryExaustedError
 from retries.stop import Stop
 
 ConditionT = t.TypeVar("ConditionT")
@@ -14,26 +14,9 @@ ReturnT = t.TypeVar("ReturnT")
 FuncT = t.Callable[..., ReturnT]
 
 
-class Condition(t.Generic[ReturnT]):
-    def __init__(self, expected: ReturnT):
-        self.expected = expected
-
-    @abc.abstractmethod
-    def maybe_apply(self, value: t.Any) -> None:
-        raise NotImplementedError
-
-
-class IsValueCondition(Condition[ReturnT]):
-    def maybe_apply(self, value: t.Any) -> None:
-        match = value == self.expected
-        if not match:
-            raise RetryConditionError(f"Expected value {self.expected} but got {value}")
-
-
 class BaseRetry(abc.ABC, t.Generic[ReturnT]):
-    def __init__(self, conditions: t.Sequence[Condition], stop: Stop) -> None:
-        self.conditions = conditions
-        self.stop = stop
+    def __init__(self, stops: t.Sequence[Stop[ReturnT]] = []) -> None:
+        self.stops = stops
 
     @abc.abstractmethod
     def __call__(
@@ -63,21 +46,38 @@ class AsyncRetry(BaseRetry[ReturnT]):
         self, func: FuncT[t.Awaitable[ReturnT]], *args: t.Any, **kwargs: t.Any
     ) -> ReturnT | Exception:
         raised_excp: bool = False
-        try:
-            value = await func(*args, **kwargs)
-        except Exception as err:
-            raised_excp = True
-            value = err
+        value: ReturnT | Exception
 
-        try:
-            for condition in self.conditions:
-                condition.maybe_apply(value)
-            if raised_excp and isinstance(value, Exception):
-                raise value
-            return value
-        except RetryConditionError:
-            self.stop.maybe_apply()
-            return await self(func, *args, **kwargs)
+        while True:
+            try:
+                value = await func(*args, **kwargs)
+            except Exception as err:
+                raised_excp = True
+                value = err
+
+            try:
+                if self._apply_conditions(value):
+                    continue
+
+                if raised_excp and isinstance(value, Exception):
+                    raise value
+                return value
+            except RetryConditionError:
+                pass
+
+    def _apply_conditions(self, value: ReturnT | Exception):
+        excp: RetryExaustedError | None = None
+
+        for stop in self.stops:
+            try:
+                if stop.maybe_apply(value):
+                    return True
+            except RetryExaustedError as err:
+                excp = err
+                continue
+
+        if excp is not None:
+            raise excp
 
 
 # ParamT = t.ParamSpec("ParamT")
