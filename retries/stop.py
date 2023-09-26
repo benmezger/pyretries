@@ -5,10 +5,14 @@
 
 
 import abc
+import logging
 import time
 import typing as t
 
 from retries.exceptions import RetryExaustedError
+
+_logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 ConditionT = t.TypeVar("ConditionT")
 ReturnT = t.TypeVar("ReturnT")
@@ -42,6 +46,8 @@ class StopAfterAttempt(Stop, t.Generic[StopValueT]):
             raise RetryExaustedError from value if isinstance(
                 value, Exception
             ) else None
+
+        _logger.info(f"{self.__class__.__name__} is at {self.current_attempt=}")
         self.current_attempt += 1
         return True
 
@@ -65,6 +71,10 @@ class Sleep(Stop, t.Generic[StopValueT]):
             ) else None
 
         self.current_attempt += 1
+        _logger.info(
+            f"{self.__class__.__name__} is at {self.current_attempt=}/{self.attempts}."
+            f" Sleeping for {self.seconds=}"
+        )
         time.sleep(self.seconds)
 
         return True
@@ -90,6 +100,9 @@ class IsValueCondition(Stop, t.Generic[StopValueT]):
             ) else None
 
         if self.max_attempts is not None:
+            _logger.info(
+                f"{self.__class__.__name__} is at {self.current_attempt}/{self.max_attempts}."
+            )
             self.current_attempt += 1
 
         return not value == self.expected

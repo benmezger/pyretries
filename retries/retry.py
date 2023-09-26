@@ -16,7 +16,8 @@ FuncT = t.Callable[..., ReturnT]
 
 class BaseRetry(abc.ABC, t.Generic[ReturnT]):
     def __init__(self, stops: t.Sequence[Stop[ReturnT]] = []) -> None:
-        self.stops = stops
+        self.stops = list(stops)
+        self._applied_stops = list[Stop[ReturnT]]()
 
     @abc.abstractmethod
     def __call__(
@@ -45,27 +46,32 @@ class AsyncRetry(BaseRetry[ReturnT]):
     async def __call__(
         self, func: FuncT[t.Awaitable[ReturnT]], *args: t.Any, **kwargs: t.Any
     ) -> ReturnT | Exception:
-        raised_excp: bool = False
+        raised_excp: bool
         value: ReturnT | Exception
 
         while True:
             try:
                 value = await func(*args, **kwargs)
+                raised_excp = False
+
+                self.stops.extend(self._applied_stops)
+                return value
             except Exception as err:
                 raised_excp = True
                 value = err
 
             try:
-                if self._apply_conditions(value):
+                if self._apply_stop_conditions(value):
                     continue
 
+                self.stops.extend(self._applied_stops)
                 if raised_excp and isinstance(value, Exception):
                     raise value
                 return value
-            except RetryConditionError:
+            except RetryExaustedError:
                 pass
 
-    def _apply_conditions(self, value: ReturnT | Exception):
+    def _apply_stop_conditions(self, value: ReturnT | Exception):
         excp: RetryExaustedError | None = None
 
         for stop in self.stops:
@@ -73,6 +79,9 @@ class AsyncRetry(BaseRetry[ReturnT]):
                 if stop.maybe_apply(value):
                     return True
             except RetryExaustedError as err:
+                self._applied_stops.append(stop)
+                self.stops.remove(stop)
+
                 excp = err
                 continue
 

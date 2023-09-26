@@ -6,7 +6,7 @@
 import asyncio
 from typing import cast
 
-from retries.retry import AsyncRetry, IsValueCondition
+from retries.retry import AsyncRetry
 from retries.stop import Sleep
 
 _counter = -1
@@ -15,7 +15,8 @@ _counter = -1
 async def make_request() -> int:
     global _counter
     _counter += 1
-    if not _counter:
+
+    if not _counter or _counter == 1:
         raise Exception("Something went wrong")
     return _counter
 
@@ -27,8 +28,9 @@ async def main():
 
     await retry(make_request)
 
-    assert retry.stop.should_stop == False
-    assert cast(Sleep, retry.stop).current_attempt == _counter
+    stop = cast(Sleep, retry.stops[0])
+    assert stop.should_stop == False
+    assert stop.current_attempt == _counter
 
 
 if __name__ == "__main__":
