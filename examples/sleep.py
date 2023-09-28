@@ -4,7 +4,7 @@
 # Created at <2023-09-24 Sun 22:33>
 
 import asyncio
-from typing import cast
+import typing as t
 
 from retries.retry import AsyncRetry
 from retries.stop import Sleep
@@ -22,15 +22,11 @@ async def make_request() -> int:
 
 
 async def main():
-    retry = AsyncRetry[int](
+    retry = AsyncRetry[t.Awaitable[int]](
         stops=[Sleep[int](seconds=1, attempts=3)],
     )
 
     await retry(make_request)
-
-    stop = cast(Sleep, retry.stops[0])
-    assert stop.should_stop == False
-    assert stop.current_attempt == _counter
 
 
 if __name__ == "__main__":

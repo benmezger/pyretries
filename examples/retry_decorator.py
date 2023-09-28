@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 
 # Author: Ben Mezger <me@benmezger.nl>
-# Created at <2023-09-24 Sun 22:09>
+# Created at <2023-09-28 Thu 23:23>
 
 import asyncio
-import typing as t
 
-from retries.retry import AsyncRetry
+from retries.retry import retry
 from retries.stop import StopAfterAttempt
 
 _counter = -1
 
 
-async def make_request() -> int:
+@retry(stops=[StopAfterAttempt(20)])
+def _make_request() -> int:
     global _counter
     _counter += 1
 
@@ -23,11 +23,21 @@ async def make_request() -> int:
     raise Exception("Something went wrong")
 
 
-async def main():
-    retry = AsyncRetry[t.Awaitable[int]](stops=[StopAfterAttempt(20)])
+async def make_request() -> int:
+    return _make_request()
 
-    await retry(make_request)
-    assert make_request.state
+
+def make_sync_request() -> int:
+    return _make_request()
+
+
+async def main():
+    global _counter
+
+    print(await make_request())
+
+    _counter = 0
+    print(make_sync_request())
 
 
 if __name__ == "__main__":

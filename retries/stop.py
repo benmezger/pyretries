@@ -20,13 +20,23 @@ FuncT = t.Callable[..., ReturnT]
 StopValueT = t.TypeVar("StopValueT")
 
 
+class Chain(t.Generic[StopValueT]):
+    def __init__(self) -> None:
+        self.chain = list["Stop"]()
+        self._current_in_chain = 0
+
+    def __or__(self, value: "Stop") -> t.Self:
+        self.chain.append(value)
+        return self
+
+
 class Stop(abc.ABC, t.Generic[StopValueT]):
     @abc.abstractproperty
     def should_stop(self) -> bool:
         raise NotImplementedError
 
     @abc.abstractmethod
-    def maybe_apply(self, value: StopValueT | Exception) -> bool:
+    def maybe_apply(self, value: StopValueT | Exception | None) -> bool:
         raise NotImplementedError
 
 
@@ -41,7 +51,7 @@ class StopAfterAttempt(Stop, t.Generic[StopValueT]):
             return True
         return False
 
-    def maybe_apply(self, value: StopValueT | Exception) -> bool:
+    def maybe_apply(self, value: StopValueT | Exception | None) -> bool:
         if self.should_stop:
             raise RetryExaustedError from value if isinstance(
                 value, Exception
@@ -64,7 +74,7 @@ class Sleep(Stop, t.Generic[StopValueT]):
             return True
         return False
 
-    def maybe_apply(self, value: StopValueT | Exception) -> bool:
+    def maybe_apply(self, value: StopValueT | Exception | None) -> bool:
         if self.should_stop:
             raise RetryExaustedError from value if isinstance(
                 value, Exception
@@ -93,7 +103,7 @@ class IsValueCondition(Stop, t.Generic[StopValueT]):
                 return True
         return False
 
-    def maybe_apply(self, value: StopValueT | Exception) -> bool:
+    def maybe_apply(self, value: StopValueT | Exception | None) -> bool:
         if self.should_stop:
             raise RetryExaustedError from value if isinstance(
                 value, Exception
