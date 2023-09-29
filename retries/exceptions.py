@@ -16,5 +16,5 @@ class RetryConditionError(BaseException):
     ...
 
 
-class RetryStopExausted(BaseException):
+class RetryStrategyExausted(BaseException):
     ...

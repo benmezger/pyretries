@@ -7,7 +7,7 @@ import asyncio
 import typing as t
 
 from retries.retry import AsyncRetry
-from retries.stop import StopAfterAttempt
+from retries.strategy import StopAfterAttempt
 
 _counter = -1
 
@@ -24,7 +24,7 @@ async def make_request() -> int:
 
 
 async def main():
-    retry = AsyncRetry[t.Awaitable[int]](stops=[StopAfterAttempt(20)])
+    retry = AsyncRetry[t.Awaitable[int]](strategies=[StopAfterAttempt(20)])
 
     await retry(make_request)
     assert make_request.state
