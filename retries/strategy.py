@@ -8,6 +8,7 @@ import abc
 import logging
 import time
 import typing as t
+import random
 
 from retries.exceptions import RetryExaustedError
 
@@ -106,3 +107,34 @@ class StopWhenReturnValue(Strategy, t.Generic[StrategyValueT]):
             self.current_attempt += 1
 
         return not value == self.expected
+
+
+class ExponentialBackoff(Strategy, t.Generic[StrategyValueT]):
+    def __init__(self, max_attempts: int, base_delay: float) -> None:
+        self.base_delay = base_delay
+        self.max_attempts = max_attempts
+        self.current_attempt = 0
+        self.delay = 0
+
+    @property
+    def should_stop(self) -> bool:
+        if self.current_attempt > self.max_attempts:
+            return True
+        return False
+
+    def maybe_apply(self, value: StrategyValueT | Exception | None) -> bool:
+        if self.should_stop:
+            raise RetryExaustedError from value if isinstance(
+                value, Exception
+            ) else None
+
+        self.current_attempt += 1
+        self.delay = self.base_delay * 2**self.current_attempt + random.uniform(0, 1)
+
+        _logger.info(
+            f"{self.__class__.__name__} {self.current_attempt}/{self.max_attempts} attempts."
+            f" Sleeping for {self.delay:.2f}s"
+        )
+
+        time.sleep(self.delay)
+        return True
