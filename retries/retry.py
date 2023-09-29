@@ -6,6 +6,7 @@
 import abc
 import functools
 import inspect
+import logging
 import typing as t
 from dataclasses import dataclass
 from datetime import datetime
@@ -16,6 +17,9 @@ from retries.strategy import Strategy
 ConditionT = t.TypeVar("ConditionT")
 ReturnT = t.TypeVar("ReturnT")
 FuncT = t.Callable[..., ReturnT]
+
+
+_logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -39,8 +43,15 @@ class RetryState(t.Generic[ReturnT]):
 
 
 class BaseRetry(abc.ABC, t.Generic[ReturnT]):
-    def __init__(self, strategies: t.Sequence[Strategy[ReturnT]] = []) -> None:
+    on_exceptions: set[type[Exception]] | None
+
+    def __init__(
+        self,
+        strategies: t.Sequence[Strategy[ReturnT]] = [],
+        on_exceptions: t.Sequence[type[Exception]] | None = None,
+    ) -> None:
         self.strategies = list(reversed(strategies))
+        self.on_exceptions = set(on_exceptions or []) or None
 
     @abc.abstractmethod
     def __call__(
@@ -66,6 +77,10 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
         state.current_attempts += 1
 
         try:
+            _logger.info(
+                f"Executing '{state.strategy_func.__class__.__name__}' retry strategy. "
+                f"Current attempt {state.current_attempts}"
+            )
             state.strategy_func.maybe_apply(state.returned_value)
         except RetryExaustedError:
             state.strategy_func = _pop(self.strategies, None)
@@ -74,6 +89,7 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
 class AsyncRetry(BaseRetry[ReturnT]):
     async def exec(self, state: RetryState[ReturnT]) -> None:
         state.clear()
+
         try:
             assert inspect.iscoroutinefunction(
                 state.func
@@ -95,11 +111,18 @@ class AsyncRetry(BaseRetry[ReturnT]):
             kwargs=kwargs,
         )
 
+        _logger.info(f"Calling '{func.__name__}'")
+
         while True:
             await self.exec(state)
 
             try:
                 if state.raised:
+                    if (exc := state.exception.__class__) not in (
+                        self.on_exceptions or [exc]
+                    ):
+                        raise RetryExaustedError from state.exception
+
                     self.exec_strategy(state)
                     continue
                 else:

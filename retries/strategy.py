@@ -72,8 +72,8 @@ class Sleep(Strategy, t.Generic[StrategyValueT]):
 
         self.current_attempt += 1
         _logger.info(
-            f"{self.__class__.__name__} is at {self.current_attempt=}/{self.attempts}."
-            f" Sleeping for {self.seconds=}"
+            f"{self.__class__.__name__} {self.current_attempt}/{self.attempts} attempts."
+            f" Sleeping for {self.seconds}s"
         )
         time.sleep(self.seconds)
 

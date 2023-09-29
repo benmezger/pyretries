@@ -24,6 +24,7 @@ async def make_request() -> int:
 async def main():
     retry = AsyncRetry[t.Awaitable[int]](
         strategies=[Sleep[int](seconds=1, attempts=3)],
+        on_exceptions=[ValueError],
     )
 
     await retry(make_request)
