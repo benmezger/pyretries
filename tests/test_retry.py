@@ -233,3 +233,14 @@ def test_retry_decorator_sync(
     assert patched_time_sleep.call_args.args == (1,)
     assert sleep.attempts == 3
     assert isinstance(err.value.__cause__, ValueError)
+
+
+def test_does_not_retry_on_matches_value_condition(
+    retry_sleep: RetrySleepFixtureT,
+) -> None:
+    def _test() -> int:
+        return 2
+
+    retry, _ = retry_sleep()
+    result = t.cast(Retry[int], retry)(_test)
+    assert result == 2

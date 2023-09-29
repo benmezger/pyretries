@@ -85,6 +85,23 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
         except RetryExaustedError:
             state.strategy_func = _pop(self.strategies, None)
 
+    def apply(self, state: RetryState[ReturnT]) -> bool:
+        try:
+            if state.raised:
+                if (exc := state.exception.__class__) not in (
+                    self.on_exceptions or [exc]
+                ):
+                    raise RetryExaustedError from state.exception
+
+                self.exec_strategy(state)
+                return True
+            else:
+                self.save_state(state)
+                return False
+
+        except RetryStrategyExausted:
+            raise RetryExaustedError from state.exception if state.raised else None
+
 
 class AsyncRetry(BaseRetry[ReturnT]):
     async def exec(self, state: RetryState[ReturnT]) -> None:
@@ -113,23 +130,12 @@ class AsyncRetry(BaseRetry[ReturnT]):
 
         _logger.info(f"Calling '{func.__name__}'")
 
-        while True:
+        should_apply = True
+        while should_apply:
             await self.exec(state)
 
-            try:
-                if state.raised:
-                    if (exc := state.exception.__class__) not in (
-                        self.on_exceptions or [exc]
-                    ):
-                        raise RetryExaustedError from state.exception
-
-                    self.exec_strategy(state)
-                    continue
-                else:
-                    self.save_state(state)
-                    return state.returned_value
-            except RetryStrategyExausted:
-                raise RetryExaustedError from state.exception if state.raised else None
+            if not (should_apply := self.apply(state)):
+                return state.returned_value
 
 
 class Retry(BaseRetry[ReturnT]):
@@ -152,18 +158,14 @@ class Retry(BaseRetry[ReturnT]):
             kwargs=kwargs,
         )
 
-        while True:
+        _logger.info(f"Calling '{func.__name__}'")
+
+        should_apply = True
+        while should_apply:
             self.exec(state)
 
-            try:
-                if state.raised:
-                    self.exec_strategy(state)
-                    continue
-                else:
-                    self.save_state(state)
-                    return state.returned_value
-            except RetryStrategyExausted:
-                raise RetryExaustedError from state.exception if state.raised else None
+            if not (should_apply := self.apply(state)):
+                return state.returned_value
 
 
 def retry(strategies: t.Sequence[Strategy]):

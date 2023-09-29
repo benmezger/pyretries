@@ -17,7 +17,7 @@ async def make_request() -> int:
     _counter += 1
 
     if not _counter or _counter == 1:
-        raise Exception("Something went wrong")
+        raise ValueError("Something went wrong")
     return _counter
 
 
