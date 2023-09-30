@@ -72,7 +72,9 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
             else:
                 raise RetryStrategyExausted
 
-        _pop = lambda l, default: l.pop() if len(l) else default
+        _pop: t.Callable[[list, t.Any], t.Any] = (
+            lambda l, default: l.pop() if len(l) else default
+        )
 
         state.current_attempts += 1
 
@@ -94,6 +96,7 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
                     raise RetryExaustedError from state.exception
 
                 self.exec_strategy(state)
+                state.clear()
                 return True
             else:
                 self.save_state(state)
@@ -105,8 +108,6 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
 
 class AsyncRetry(BaseRetry[ReturnT]):
     async def exec(self, state: RetryState[ReturnT]) -> None:
-        state.clear()
-
         try:
             assert inspect.iscoroutinefunction(
                 state.func
@@ -130,17 +131,16 @@ class AsyncRetry(BaseRetry[ReturnT]):
 
         _logger.info(f"Calling '{func.__name__}'")
 
-        should_apply = True
-        while should_apply:
+        should_reapply = True
+        while should_reapply:
             await self.exec(state)
 
-            if not (should_apply := self.apply(state)):
+            if not (should_reapply := self.apply(state)):
                 return state.returned_value
 
 
 class Retry(BaseRetry[ReturnT]):
     def exec(self, state: RetryState[ReturnT]) -> None:
-        state.clear()
         try:
             state.returned_value = state.func(
                 *(state.args or ()), **(state.kwargs or {})
