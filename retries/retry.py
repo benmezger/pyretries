@@ -17,6 +17,8 @@ from retries.strategy import Strategy
 ConditionT = t.TypeVar("ConditionT")
 ReturnT = t.TypeVar("ReturnT")
 FuncT = t.Callable[..., ReturnT]
+AfterHookFuncT = t.Callable[[Exception | ReturnT], None]
+BeforeHookFuncT = t.Callable[..., None]
 
 
 _logger = logging.getLogger(__name__)
@@ -49,9 +51,14 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
         self,
         strategies: t.Sequence[Strategy[ReturnT]] = [],
         on_exceptions: t.Sequence[type[Exception]] | None = None,
+        before_hooks: t.Sequence[BeforeHookFuncT] | None = None,
+        after_hooks: t.Sequence[AfterHookFuncT[ReturnT]] | None = None,
     ) -> None:
         self.strategies = list(reversed(strategies))
         self.on_exceptions = set(on_exceptions or []) or None
+
+        self.before_hooks = before_hooks or []
+        self.after_hooks = after_hooks or []
 
     @abc.abstractmethod
     def __call__(
@@ -70,22 +77,32 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
             if len(self.strategies):
                 state.strategy_func = self.strategies.pop()
             else:
-                raise RetryStrategyExausted
+                raise RetryExaustedError
 
         _pop: t.Callable[[list, t.Any], t.Any] = (
             lambda l, default: l.pop() if len(l) else default
         )
 
-        state.current_attempts += 1
-
         try:
+            if state.strategy_func.should_stop:
+                raise RetryStrategyExausted
+
             _logger.info(
                 f"Executing '{state.strategy_func.__class__.__name__}' retry strategy. "
                 f"Current attempt {state.current_attempts}"
             )
+
             state.strategy_func.maybe_apply(state.returned_value)
-        except RetryExaustedError:
-            state.strategy_func = _pop(self.strategies, None)
+            state.current_attempts += 1
+
+            if state.strategy_func.should_stop:
+                state.strategy_func = None
+
+        except RetryStrategyExausted:
+            # TODO: Improve this logic
+            if (next_strategy := _pop(self.strategies, None)) is None:
+                raise RetryExaustedError
+            state.strategy_func = next_strategy
 
     def apply(self, state: RetryState[ReturnT]) -> bool:
         try:
@@ -102,22 +119,28 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
                 self.save_state(state)
                 return False
 
-        except RetryStrategyExausted:
-            raise RetryExaustedError from state.exception if state.raised else None
+        except RetryExaustedError as err:
+            raise err from state.exception if state.raised else None
 
 
 class AsyncRetry(BaseRetry[ReturnT]):
     async def exec(self, state: RetryState[ReturnT]) -> None:
-        try:
-            assert inspect.iscoroutinefunction(
-                state.func
-            ), f"{self.__class__.__name__} needs an awaitable func"
+        assert inspect.iscoroutinefunction(
+            state.func
+        ), f"{self.__class__.__name__} needs an awaitable func"
 
+        for hook in self.before_hooks:
+            hook()
+
+        try:
             state.returned_value = await state.func(
                 *(state.args or ()), **(state.kwargs or {})
             )
         except Exception as err:
             state.exception = err
+
+        for hook in self.after_hooks:
+            hook(state.exception or state.returned_value)
 
     async def __call__(
         self, func: FuncT[ReturnT], *args: t.Any, **kwargs: t.Any
@@ -141,12 +164,18 @@ class AsyncRetry(BaseRetry[ReturnT]):
 
 class Retry(BaseRetry[ReturnT]):
     def exec(self, state: RetryState[ReturnT]) -> None:
+        for hook in self.before_hooks:
+            hook()
+
         try:
             state.returned_value = state.func(
                 *(state.args or ()), **(state.kwargs or {})
             )
         except Exception as err:
             state.exception = err
+
+        for hook in self.after_hooks:
+            hook(state.exception or state.returned_value)
 
     def __call__(
         self, func: FuncT[ReturnT], *args: t.Any, **kwargs: t.Any
@@ -160,11 +189,11 @@ class Retry(BaseRetry[ReturnT]):
 
         _logger.info(f"Calling '{func.__name__}'")
 
-        should_apply = True
-        while should_apply:
+        should_reapply = True
+        while should_reapply:
             self.exec(state)
 
-            if not (should_apply := self.apply(state)):
+            if not (should_reapply := self.apply(state)):
                 return state.returned_value
 
 

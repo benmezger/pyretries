@@ -6,11 +6,11 @@
 
 import abc
 import logging
+import random
 import time
 import typing as t
-import random
 
-from retries.exceptions import RetryExaustedError
+from retries.exceptions import RetryStrategyExausted
 
 _logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -44,7 +44,7 @@ class StopAfterAttempt(Strategy, t.Generic[StrategyValueT]):
 
     def maybe_apply(self, value: StrategyValueT | Exception | None) -> bool:
         if self.should_stop:
-            raise RetryExaustedError from value if isinstance(
+            raise RetryStrategyExausted from value if isinstance(
                 value, Exception
             ) else None
 
@@ -67,7 +67,7 @@ class Sleep(Strategy, t.Generic[StrategyValueT]):
 
     def maybe_apply(self, value: StrategyValueT | Exception | None) -> bool:
         if self.should_stop:
-            raise RetryExaustedError from value if isinstance(
+            raise RetryStrategyExausted from value if isinstance(
                 value, Exception
             ) else None
 
@@ -78,6 +78,27 @@ class Sleep(Strategy, t.Generic[StrategyValueT]):
         )
         time.sleep(self.seconds)
 
+        return True
+
+
+class NoopStrategy(Strategy, t.Generic[StrategyValueT]):
+    def __init__(self, attempts: int = 1) -> None:
+        self.attempts = attempts
+        self.current_attempt = 0
+
+    @property
+    def should_stop(self) -> bool:
+        if self.current_attempt >= self.attempts:
+            return True
+        return False
+
+    def maybe_apply(self, value: StrategyValueT | Exception | None) -> bool:
+        if self.should_stop:
+            raise RetryStrategyExausted from value if isinstance(
+                value, Exception
+            ) else None
+
+        self.current_attempt += 1
         return True
 
 
@@ -96,7 +117,7 @@ class StopWhenReturnValue(Strategy, t.Generic[StrategyValueT]):
 
     def maybe_apply(self, value: StrategyValueT | Exception | None) -> bool:
         if self.should_stop:
-            raise RetryExaustedError from value if isinstance(
+            raise RetryStrategyExausted from value if isinstance(
                 value, Exception
             ) else None
 
@@ -124,7 +145,7 @@ class ExponentialBackoff(Strategy, t.Generic[StrategyValueT]):
 
     def maybe_apply(self, value: StrategyValueT | Exception | None) -> bool:
         if self.should_stop:
-            raise RetryExaustedError from value if isinstance(
+            raise RetryStrategyExausted from value if isinstance(
                 value, Exception
             ) else None
 

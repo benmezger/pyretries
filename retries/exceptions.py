@@ -10,11 +10,5 @@ class RetryExaustedError(BaseException):
     ...
 
 
-class RetryConditionError(BaseException):
-    """Raised when a condition does not apply to a given value"""
-
-    ...
-
-
 class RetryStrategyExausted(BaseException):
     ...
