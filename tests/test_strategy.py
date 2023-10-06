@@ -4,20 +4,12 @@
 # Created at <2023-10-06 Fri 20:43>
 
 import random
-import time
 from unittest.mock import MagicMock
 
 import pytest
 
 from retries import strategy
 from retries.exceptions import RetryStrategyExausted
-
-
-@pytest.fixture
-def sleep(monkeypatch) -> MagicMock:
-    monkeypatch.setattr(time, "sleep", mock := MagicMock())
-    mock.return_value = None
-    return mock
 
 
 class TestSleepStrategy:

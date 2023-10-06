@@ -79,10 +79,6 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
             else:
                 raise RetryExaustedError
 
-        _pop: t.Callable[[list, t.Any], t.Any] = (
-            lambda l, default: l.pop() if len(l) else default
-        )
-
         try:
             if state.strategy_func.should_stop:
                 raise RetryStrategyExausted
@@ -99,10 +95,7 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
                 state.strategy_func = None
 
         except RetryStrategyExausted:
-            # TODO: Improve this logic
-            if (next_strategy := _pop(self.strategies, None)) is None:
-                raise RetryExaustedError
-            state.strategy_func = next_strategy
+            raise RetryExaustedError
 
     def apply(self, state: RetryState[ReturnT]) -> bool:
         try:

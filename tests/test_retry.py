@@ -9,7 +9,14 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from retries.exceptions import RetryExaustedError
-from retries.retry import AfterHookFuncT, AsyncRetry, BeforeHookFuncT, Retry
+from retries.retry import (
+    AfterHookFuncT,
+    AsyncRetry,
+    BaseRetry,
+    BeforeHookFuncT,
+    Retry,
+    retry,
+)
 from retries.strategy import NoopStrategy, Strategy
 
 
@@ -212,6 +219,20 @@ async def test_async_applies_strategy(
 
 
 @pytest.mark.asyncio
+async def test_async_applies_strategy_and_raises(
+    async_retry: t.Callable[..., AsyncRetry[t.Any]], async_func: AsyncMock
+) -> None:
+    async_func.side_effect = KeyError
+
+    retry = async_retry(
+        strategies=[NoopStrategy(0)],
+    )
+
+    with pytest.raises(RetryExaustedError):
+        await retry(async_func)
+
+
+@pytest.mark.asyncio
 async def test_async_applies_multiple_strategies(
     async_retry: t.Callable[..., AsyncRetry[t.Any]], async_func: AsyncMock
 ) -> None:
@@ -228,6 +249,17 @@ async def test_async_applies_multiple_strategies(
     assert async_func.call_count == 7
     assert noop.current_attempt == 2
     assert noop_2.current_attempt == 4
+
+
+@pytest.mark.asyncio
+async def test_retry_async_decorator(monkeypatch) -> None:
+    monkeypatch.setattr(AsyncRetry, "__call__", mock := AsyncMock())
+
+    async def _test() -> None:
+        pass
+
+    assert await retry(strategies=[])(_test)()
+    assert mock.call_count == 1
 
 
 def test_sync_retry_runs_func(
@@ -386,6 +418,34 @@ def test_sync_applies_multiple_strategies(
     assert func.call_count == 7
     assert noop.current_attempt == 2
     assert noop_2.current_attempt == 4
+
+
+def test_retry_sync_decorator(monkeypatch) -> None:
+    monkeypatch.setattr(Retry, "__call__", mock := MagicMock())
+
+    def _test() -> None:
+        pass
+
+    assert retry(strategies=[])(_test)()
+    assert mock.call_count == 1
+
+
+# @patch("time.sleep", return_value=None)
+# def test_retry_decorator_sync(
+#    patched_time_sleep, retry_sleep: RetrySleepFixtureT
+# ) -> None:
+#    def _test() -> None:
+#        raise ValueError("Something is wrong")
+#
+#    _, sleep = retry_sleep()
+#
+#    with pytest.raises(RetryExaustedError) as err:
+#        retry(strategies=[sleep])(_test)()
+#
+#    assert patched_time_sleep.call_count == 3
+#    assert patched_time_sleep.call_args.args == (1,)
+#    assert sleep.attempts == 3
+#    assert isinstance(err.value.__cause__, ValueError)
 
 
 # @pytest.mark.asyncio

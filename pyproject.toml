@@ -27,6 +27,13 @@ testpaths = [
     "tests",
 ]
 
+[tool.coverage.report]
+exclude_also = [
+    # Don't complain about abstract methods, they aren't run:
+    "@(abc\\.)?abstractmethod",
+    "@(abc\\.)?abstractproperty",
+    ]
+
 [tool.taskipy.tasks]
 fmt = "isort --profile=black . && black ."
 test = "pytest -vv ."
