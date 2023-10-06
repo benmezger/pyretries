@@ -21,6 +21,10 @@ async def make_request() -> int:
     return _counter
 
 
+async def ok() -> bool:
+    return True
+
+
 async def main():
     retry = AsyncRetry[t.Awaitable[int]](
         strategies=[ExponentialBackoffStrategy[int](max_attempts=3, base_delay=2)],
@@ -28,6 +32,13 @@ async def main():
     )
 
     print(await retry(make_request))
+
+    retry = AsyncRetry[t.Awaitable[bool]](
+        strategies=[ExponentialBackoffStrategy[bool](max_attempts=3, base_delay=2)],
+        on_exceptions=[ValueError],
+    )
+
+    print(await retry(ok))
 
 
 if __name__ == "__main__":

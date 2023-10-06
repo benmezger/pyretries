@@ -23,11 +23,18 @@ async def make_request() -> int:
     raise Exception("Something went wrong")
 
 
+async def ok() -> bool:
+    return True
+
+
 async def main():
     retry = AsyncRetry[t.Awaitable[int]](strategies=[StopAfterAttemptStrategy(20)])
 
     print(await retry(make_request))
-    assert make_request.state
+
+    retry = AsyncRetry[t.Awaitable[bool]](strategies=[StopAfterAttemptStrategy(20)])
+
+    print(await retry(ok))
 
 
 if __name__ == "__main__":
