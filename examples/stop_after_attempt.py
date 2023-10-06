@@ -26,7 +26,7 @@ async def make_request() -> int:
 async def main():
     retry = AsyncRetry[t.Awaitable[int]](strategies=[StopAfterAttempt(20)])
 
-    await retry(make_request)
+    print(await retry(make_request))
     assert make_request.state
 
 
