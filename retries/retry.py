@@ -11,8 +11,6 @@ import typing as t
 from dataclasses import dataclass
 from datetime import datetime
 
-from _pytest.fixtures import resolve_fixture_function
-
 from retries.exceptions import RetryExaustedError, RetryStrategyExausted
 from retries.strategy import Strategy
 
