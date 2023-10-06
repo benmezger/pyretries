@@ -15,6 +15,7 @@ from retries.retry import (
     BaseRetry,
     BeforeHookFuncT,
     Retry,
+    RetryExceptionCallHook,
     retry,
 )
 from retries.strategy import NoopStrategy, Strategy
@@ -27,12 +28,14 @@ def async_retry():
         on_exceptions: list[type[Exception]] | None = None,
         before_hooks: list[BeforeHookFuncT] | None = None,
         after_hooks: list[AfterHookFuncT] | None = None,
+        retry_exception_hook: RetryExceptionCallHook | None = None,
     ) -> AsyncRetry[t.Any]:
         return AsyncRetry[t.Any](
             strategies=strategies or [],
             on_exceptions=on_exceptions,
             before_hooks=before_hooks or [],
             after_hooks=after_hooks or [],
+            retry_exception_hook=retry_exception_hook,
         )
 
     return _async_retry
@@ -45,12 +48,14 @@ def sync_retry():
         on_exceptions: list[type[Exception]] | None = None,
         before_hooks: list[BeforeHookFuncT] | None = None,
         after_hooks: list[AfterHookFuncT] | None = None,
+        retry_exception_hook: RetryExceptionCallHook | None = None,
     ) -> Retry[t.Any]:
         return Retry[t.Any](
             strategies=strategies or [],
             on_exceptions=on_exceptions,
             before_hooks=before_hooks or [],
             after_hooks=after_hooks or [],
+            retry_exception_hook=retry_exception_hook,
         )
 
     return _sync_retry
@@ -198,6 +203,24 @@ async def test_async_applies_list_of_after_hooks(
 
     for hook in hooks:
         assert hook.call_count == 1
+    assert async_func.call_count == 1
+
+
+@pytest.mark.asyncio
+async def test_async_applies_exception_hook(
+    async_retry: t.Callable[..., AsyncRetry[t.Any]], async_func: AsyncMock
+) -> None:
+    hook_mock = MagicMock()
+    async_func.side_effect = ValueError
+
+    retry = async_retry(
+        retry_exception_hook=hook_mock,
+    )
+
+    with pytest.raises(RetryExaustedError):
+        await retry(async_func)
+
+    assert hook_mock.call_count == 1
     assert async_func.call_count == 1
 
 
@@ -360,6 +383,23 @@ def test_sync_applies_after_hook(
     )
 
     retry(func)
+    assert hook_mock.call_count == 1
+    assert func.call_count == 1
+
+
+def test_sync_applies_exception_hook(
+    sync_retry: t.Callable[..., Retry[t.Any]], func: MagicMock
+) -> None:
+    hook_mock = MagicMock()
+    func.side_effect = ValueError
+
+    retry = sync_retry(
+        retry_exception_hook=hook_mock,
+    )
+
+    with pytest.raises(RetryExaustedError):
+        retry(func)
+
     assert hook_mock.call_count == 1
     assert func.call_count == 1
 

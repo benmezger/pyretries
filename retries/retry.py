@@ -11,6 +11,8 @@ import typing as t
 from dataclasses import dataclass
 from datetime import datetime
 
+from _pytest.fixtures import resolve_fixture_function
+
 from retries.exceptions import RetryExaustedError, RetryStrategyExausted
 from retries.strategy import Strategy
 
@@ -19,6 +21,7 @@ ReturnT = t.TypeVar("ReturnT")
 FuncT = t.Callable[..., ReturnT]
 AfterHookFuncT = t.Callable[[Exception | ReturnT], None]
 BeforeHookFuncT = t.Callable[..., None]
+RetryExceptionCallHook = t.Callable[[Exception], None]
 
 
 _logger = logging.getLogger(__name__)
@@ -53,12 +56,14 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
         on_exceptions: t.Sequence[type[Exception]] | None = None,
         before_hooks: t.Sequence[BeforeHookFuncT] | None = None,
         after_hooks: t.Sequence[AfterHookFuncT[ReturnT]] | None = None,
+        retry_exception_hook: RetryExceptionCallHook | None = None,
     ) -> None:
         self.strategies = list(reversed(strategies))
         self.on_exceptions = set(on_exceptions or []) or None
 
         self.before_hooks = before_hooks or []
         self.after_hooks = after_hooks or []
+        self.retry_exception_hook = retry_exception_hook
 
     @abc.abstractmethod
     def __call__(
@@ -115,6 +120,22 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
         except RetryExaustedError as err:
             raise err from state.exception if state.raised else None
 
+    def _pre_exec(self, _: RetryState[ReturnT]) -> None:
+        for hook in self.before_hooks:
+            hook()
+
+    def _post_exec(
+        self, state: RetryState[ReturnT], exception: Exception | None
+    ) -> None:
+        if exception:
+            state.exception = exception
+
+            if self.retry_exception_hook:
+                self.retry_exception_hook(exception)
+
+        for hook in self.after_hooks:
+            hook(state.exception or state.returned_value)
+
 
 class AsyncRetry(BaseRetry[ReturnT]):
     async def exec(self, state: RetryState[ReturnT]) -> None:
@@ -122,18 +143,17 @@ class AsyncRetry(BaseRetry[ReturnT]):
             state.func
         ), f"{self.__class__.__name__} needs an awaitable func"
 
-        for hook in self.before_hooks:
-            hook()
+        self._pre_exec(state)
 
+        exception: Exception | None = None
         try:
             state.returned_value = await state.func(
                 *(state.args or ()), **(state.kwargs or {})
             )
         except Exception as err:
-            state.exception = err
+            exception = err
 
-        for hook in self.after_hooks:
-            hook(state.exception or state.returned_value)
+        self._post_exec(state, exception)
 
     async def __call__(
         self, func: FuncT[ReturnT], *args: t.Any, **kwargs: t.Any
@@ -157,18 +177,17 @@ class AsyncRetry(BaseRetry[ReturnT]):
 
 class Retry(BaseRetry[ReturnT]):
     def exec(self, state: RetryState[ReturnT]) -> None:
-        for hook in self.before_hooks:
-            hook()
+        self._pre_exec(state)
 
+        exception: Exception | None = None
         try:
             state.returned_value = state.func(
                 *(state.args or ()), **(state.kwargs or {})
             )
         except Exception as err:
-            state.exception = err
+            exception = err
 
-        for hook in self.after_hooks:
-            hook(state.exception or state.returned_value)
+        self._post_exec(state, exception)
 
     def __call__(
         self, func: FuncT[ReturnT], *args: t.Any, **kwargs: t.Any
