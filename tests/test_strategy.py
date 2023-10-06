@@ -125,3 +125,36 @@ class TestStopAfterAttempt:
             s.maybe_apply(None)
 
         assert err.value.__cause__ == None
+
+
+class TestWhenReturnValueIs:
+    @pytest.mark.parametrize(("attempts",), ((1,), (2,), (3,), (4,)))
+    def test_return_value(self, attempts: int):
+        s = strategy.StopWhenReturnValue(expected=attempts, max_attempts=2)
+        assert s.current_attempt == 0
+
+        assert s.maybe_apply(attempts) is False
+        assert s.current_attempt == 1
+
+    def test_raises_when_max_attempts(self):
+        s = strategy.StopWhenReturnValue(None, 2)
+
+        with pytest.raises(RetryStrategyExausted) as err:
+            for _ in range(3):
+                s.maybe_apply(1)
+
+        assert err.value.__cause__ == None
+
+
+class TestNopStrategy:
+    @pytest.mark.parametrize(("attempts",), ((1,), (2,), (3,), (4,)))
+    def test_return_value(self, attempts: int):
+        s = strategy.NoopStrategy(attempts)
+        assert s.current_attempt == 0
+
+        with pytest.raises(RetryStrategyExausted) as err:
+            for _ in range(attempts + 1):
+                s.maybe_apply(1)
+
+        assert s.current_attempt == attempts
+        assert err.value.__cause__ == None

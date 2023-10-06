@@ -255,10 +255,10 @@ async def test_async_applies_multiple_strategies(
 async def test_retry_async_decorator(monkeypatch) -> None:
     monkeypatch.setattr(AsyncRetry, "__call__", mock := AsyncMock())
 
-    async def _test() -> None:
-        pass
+    async def _test():
+        ...
 
-    assert await retry(strategies=[])(_test)()
+    await retry(strategies=[])(_test)()
     assert mock.call_count == 1
 
 
