@@ -139,7 +139,7 @@ class ExponentialBackoff(Strategy, t.Generic[StrategyValueT]):
 
     @property
     def should_stop(self) -> bool:
-        if self.current_attempt > self.max_attempts:
+        if self.current_attempt >= self.max_attempts:
             return True
         return False
 
