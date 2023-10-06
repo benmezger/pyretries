@@ -31,7 +31,7 @@ class Strategy(abc.ABC, t.Generic[StrategyValueT]):
         raise NotImplementedError
 
 
-class StopAfterAttempt(Strategy, t.Generic[StrategyValueT]):
+class StopAfterAttemptStrategy(Strategy, t.Generic[StrategyValueT]):
     def __init__(self, attempts: int) -> None:
         self.attempts = attempts
         self.current_attempt = 0
@@ -53,7 +53,7 @@ class StopAfterAttempt(Strategy, t.Generic[StrategyValueT]):
         return True
 
 
-class Sleep(Strategy, t.Generic[StrategyValueT]):
+class SleepStrategy(Strategy, t.Generic[StrategyValueT]):
     def __init__(self, seconds: float, attempts: int = 1):
         self.seconds = seconds
         self.attempts = attempts
@@ -102,7 +102,7 @@ class NoopStrategy(Strategy, t.Generic[StrategyValueT]):
         return True
 
 
-class StopWhenReturnValue(Strategy, t.Generic[StrategyValueT]):
+class StopWhenReturnValueStrategy(Strategy, t.Generic[StrategyValueT]):
     def __init__(self, expected: t.Any, max_attempts: int | None = None) -> None:
         self.expected = expected
         self.max_attempts = max_attempts
@@ -130,7 +130,7 @@ class StopWhenReturnValue(Strategy, t.Generic[StrategyValueT]):
         return not value == self.expected
 
 
-class ExponentialBackoff(Strategy, t.Generic[StrategyValueT]):
+class ExponentialBackoffStrategy(Strategy, t.Generic[StrategyValueT]):
     def __init__(self, max_attempts: int, base_delay: float) -> None:
         self.base_delay = base_delay
         self.max_attempts = max_attempts

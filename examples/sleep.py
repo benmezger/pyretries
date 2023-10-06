@@ -7,7 +7,7 @@ import asyncio
 import typing as t
 
 from retries.retry import AsyncRetry
-from retries.strategy import ExponentialBackoff
+from retries.strategy import ExponentialBackoffStrategy
 
 _counter = -1
 
@@ -23,7 +23,7 @@ async def make_request() -> int:
 
 async def main():
     retry = AsyncRetry[t.Awaitable[int]](
-        strategies=[ExponentialBackoff[int](max_attempts=3, base_delay=2)],
+        strategies=[ExponentialBackoffStrategy[int](max_attempts=3, base_delay=2)],
         on_exceptions=[ValueError],
     )
 

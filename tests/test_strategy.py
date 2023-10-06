@@ -15,7 +15,7 @@ from retries.exceptions import RetryStrategyExausted
 class TestSleepStrategy:
     @pytest.mark.parametrize(("seconds", "attempts"), ((1, 1), (2, 2), (3, 3), (4, 4)))
     def test_sleeps_for_n_seconds(self, seconds: int, attempts: int, sleep: MagicMock):
-        s = strategy.Sleep(seconds, attempts)
+        s = strategy.SleepStrategy(seconds, attempts)
         assert s.current_attempt == 0
 
         with pytest.raises(RetryStrategyExausted):
@@ -26,7 +26,7 @@ class TestSleepStrategy:
         assert s.current_attempt == attempts
 
     def test_raises_from_value(self):
-        s = strategy.Sleep(1, 0)
+        s = strategy.SleepStrategy(1, 0)
 
         with pytest.raises(RetryStrategyExausted) as err:
             s.maybe_apply(ValueError("Error"))
@@ -34,7 +34,7 @@ class TestSleepStrategy:
         assert isinstance(err.value.__cause__, ValueError)
 
     def test_raises_from_none_when_value_is_not_an_exception(self):
-        s = strategy.Sleep(1, 0)
+        s = strategy.SleepStrategy(1, 0)
 
         with pytest.raises(RetryStrategyExausted) as err:
             s.maybe_apply(None)
@@ -70,7 +70,7 @@ class TestExponentialBackoffStrategy:
         sleep: MagicMock,
         uniform: MagicMock,
     ):
-        s = strategy.ExponentialBackoff(attempts, base_delay)
+        s = strategy.ExponentialBackoffStrategy(attempts, base_delay)
         assert s.current_attempt == 0
 
         with pytest.raises(RetryStrategyExausted):
@@ -82,7 +82,7 @@ class TestExponentialBackoffStrategy:
         assert s.current_attempt == attempts
 
     def test_raises_from_value(self):
-        s = strategy.ExponentialBackoff(0, 1)
+        s = strategy.ExponentialBackoffStrategy(0, 1)
 
         with pytest.raises(RetryStrategyExausted) as err:
             s.maybe_apply(ValueError("Error"))
@@ -90,7 +90,7 @@ class TestExponentialBackoffStrategy:
         assert isinstance(err.value.__cause__, ValueError)
 
     def test_raises_from_none_when_value_is_not_an_exception(self):
-        s = strategy.ExponentialBackoff(0, 0)
+        s = strategy.ExponentialBackoffStrategy(0, 0)
 
         with pytest.raises(RetryStrategyExausted) as err:
             s.maybe_apply(None)
@@ -101,7 +101,7 @@ class TestExponentialBackoffStrategy:
 class TestStopAfterAttempt:
     @pytest.mark.parametrize(("attempts"), (1, 2, 3, 4))
     def test_sleeps_for_n_seconds(self, attempts: int):
-        s = strategy.StopAfterAttempt(attempts)
+        s = strategy.StopAfterAttemptStrategy(attempts)
         assert s.current_attempt == 0
 
         with pytest.raises(RetryStrategyExausted):
@@ -111,7 +111,7 @@ class TestStopAfterAttempt:
         assert s.current_attempt == attempts
 
     def test_raises_from_value(self):
-        s = strategy.StopAfterAttempt(0)
+        s = strategy.StopAfterAttemptStrategy(0)
 
         with pytest.raises(RetryStrategyExausted) as err:
             s.maybe_apply(ValueError("Error"))
@@ -119,7 +119,7 @@ class TestStopAfterAttempt:
         assert isinstance(err.value.__cause__, ValueError)
 
     def test_raises_from_none_when_value_is_not_an_exception(self):
-        s = strategy.StopAfterAttempt(0)
+        s = strategy.StopAfterAttemptStrategy(0)
 
         with pytest.raises(RetryStrategyExausted) as err:
             s.maybe_apply(None)
@@ -130,14 +130,14 @@ class TestStopAfterAttempt:
 class TestWhenReturnValueIs:
     @pytest.mark.parametrize(("attempts",), ((1,), (2,), (3,), (4,)))
     def test_return_value(self, attempts: int):
-        s = strategy.StopWhenReturnValue(expected=attempts, max_attempts=2)
+        s = strategy.StopWhenReturnValueStrategy(expected=attempts, max_attempts=2)
         assert s.current_attempt == 0
 
         assert s.maybe_apply(attempts) is False
         assert s.current_attempt == 1
 
     def test_raises_when_max_attempts(self):
-        s = strategy.StopWhenReturnValue(None, 2)
+        s = strategy.StopWhenReturnValueStrategy(None, 2)
 
         with pytest.raises(RetryStrategyExausted) as err:
             for _ in range(3):

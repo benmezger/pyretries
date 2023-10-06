@@ -6,12 +6,12 @@
 import asyncio
 
 from retries.retry import retry
-from retries.strategy import StopAfterAttempt
+from retries.strategy import StopAfterAttemptStrategy
 
 _counter = -1
 
 
-@retry(strategies=[StopAfterAttempt(20)])
+@retry(strategies=[StopAfterAttemptStrategy(20)])
 def _make_request() -> int:
     global _counter
     _counter += 1
