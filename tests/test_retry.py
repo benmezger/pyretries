@@ -12,7 +12,6 @@ from retries.exceptions import RetryExaustedError
 from retries.retry import (
     AfterHookFuncT,
     AsyncRetry,
-    BaseRetry,
     BeforeHookFuncT,
     Retry,
     RetryExceptionCallHook,
