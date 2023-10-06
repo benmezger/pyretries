@@ -114,7 +114,6 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
                 state.clear()
                 return True
             else:
-                self.save_state(state)
                 return False
 
         except RetryExaustedError as err:
@@ -172,7 +171,10 @@ class AsyncRetry(BaseRetry[ReturnT]):
             await self.exec(state)
 
             if not (should_reapply := self.apply(state)):
-                return state.returned_value
+                break
+
+        self.save_state(state)
+        return state.returned_value
 
 
 class Retry(BaseRetry[ReturnT]):
@@ -206,7 +208,10 @@ class Retry(BaseRetry[ReturnT]):
             self.exec(state)
 
             if not (should_reapply := self.apply(state)):
-                return state.returned_value
+                break
+
+        self.save_state(state)
+        return state.returned_value
 
 
 def retry(strategies: t.Sequence[Strategy]):

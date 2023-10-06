@@ -15,6 +15,7 @@ from retries.retry import (
     BeforeHookFuncT,
     Retry,
     RetryExceptionCallHook,
+    RetryState,
     retry,
 )
 from retries.strategy import NoopStrategy, Strategy
@@ -100,6 +101,19 @@ async def test_async_retry_runs_func_with_args(
     assert result == 4
     assert async_func.call_count == 1
     assert async_func.call_args.kwargs == kwargs
+
+
+@pytest.mark.asyncio
+async def test_async_sets_state(
+    async_retry: t.Callable[..., AsyncRetry[t.Any]], async_func: AsyncMock
+) -> None:
+    async_func.return_value = 4
+
+    retry = async_retry()
+    await retry(async_func)
+
+    state: RetryState = async_func.state
+    state.returned_value = 4
 
 
 @pytest.mark.asyncio
@@ -308,6 +322,18 @@ def test_sync_retry_runs_func_with_args(
     assert result == 4
     assert func.call_count == 1
     assert func.call_args.kwargs == kwargs
+
+
+def test_sync_sets_state(
+    sync_retry: t.Callable[..., Retry[t.Any]], func: MagicMock
+) -> None:
+    func.return_value = 4
+
+    retry = sync_retry()
+    retry(func)
+
+    state: RetryState = func.state
+    state.returned_value = 4
 
 
 def test_sync_retry_raises_exception(
