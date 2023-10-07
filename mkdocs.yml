@@ -6,7 +6,7 @@ plugins:
       python:
         options:
           show_docstring_raises: true
-        paths: [retries]
+        paths: [pyretries]
 
 theme:
   name: material

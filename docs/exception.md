@@ -2,4 +2,4 @@
 
 Retry and strategy exceptions
 
-::: retries.exceptions
+::: pyretries.exceptions

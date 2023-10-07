@@ -2,4 +2,4 @@
 
 Retry strategies.
 
-::: retries.strategy
+::: pyretries.strategy
