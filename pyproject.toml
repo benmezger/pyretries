@@ -12,7 +12,6 @@ keywords = ["retry", "python"]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-taskipy = "^1.12.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.2"
@@ -26,6 +25,7 @@ mkdocs = "^1.5.3"
 mkdocstrings = {version = "^0.23.0", extras = ["python"]}
 mkdocs-material = "^9.4.4"
 freezegun = "^1.2.2"
+taskipy = "^1.12.0"
 
 [build-system]
 requires = ["poetry-core"]
