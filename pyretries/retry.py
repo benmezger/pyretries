@@ -376,7 +376,14 @@ class Retry(BaseRetry[ReturnT]):
         return state.returned_value
 
 
-def retry(strategies: t.Sequence[Strategy]):
+def retry(
+    strategies: t.Sequence[Strategy] = [],
+    on_exceptions: t.Sequence[type[Exception]] | None = None,
+    before_hooks: t.Sequence[BeforeHookFuncT] | None = None,
+    after_hooks: t.Sequence[AfterHookFuncT[ReturnT]] | None = None,
+    retry_exception_hook: RetryExceptionCallHook | None = None,
+    should_log: bool = True,
+):
     """
     Retry decorator. Works both for sync and async functions
 
@@ -389,7 +396,12 @@ def retry(strategies: t.Sequence[Strategy]):
         True
 
     Args:
-        strategies: A sequence of retry strategies
+        strategies: Sequence of retry strategies
+        on_exceptions: Sequence of exceptions to apply a retry strategy.
+        before_hooks: Hooks to run before running `func`. Runs Before strategy.
+        after_hooks: Hooks to run after running `func`. Runs before strategy.
+        retry_exception_hook: Hook to run when `func` raised an exception. Runs before strategy.
+        should_log: Specifies whether retry should log actions
 
     Returns:
         func (FuncT[ReturnT]): Functions return value or exception
@@ -401,9 +413,23 @@ def retry(strategies: t.Sequence[Strategy]):
         @functools.wraps(func)
         def wrapper_retry(*args, **kwargs):
             if inspect.iscoroutinefunction(func):
-                return AsyncRetry(strategies=strategies)(func, *args, **kwargs)
+                return AsyncRetry(
+                    strategies=strategies,
+                    on_exceptions=on_exceptions,
+                    before_hooks=before_hooks,
+                    after_hooks=after_hooks,
+                    retry_exception_hook=retry_exception_hook,
+                    should_log=should_log,
+                )(func, *args, **kwargs)
 
-            return Retry(strategies=strategies)(func, *args, **kwargs)
+            return Retry(
+                strategies=strategies,
+                on_exceptions=on_exceptions,
+                before_hooks=before_hooks,
+                after_hooks=after_hooks,
+                retry_exception_hook=retry_exception_hook,
+                should_log=should_log,
+            )(func, *args, **kwargs)
 
         return t.cast(FuncT[ReturnT], wrapper_retry)
 
