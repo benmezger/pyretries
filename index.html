@@ -610,11 +610,7 @@
 
             <details class="quote">
               <summary>Source code in <code>retries/retry.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">236</span>
-<span class="normal">237</span>
-<span class="normal">238</span>
-<span class="normal">239</span>
-<span class="normal">240</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">240</span>
 <span class="normal">241</span>
 <span class="normal">242</span>
 <span class="normal">243</span>
@@ -676,7 +672,12 @@
 <span class="normal">299</span>
 <span class="normal">300</span>
 <span class="normal">301</span>
-<span class="normal">302</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">AsyncRetry</span><span class="p">(</span><span class="n">BaseRetry</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]):</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">AsyncRetry</span><span class="p">(</span><span class="n">BaseRetry</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Asynchronous retry</span>
 
@@ -732,7 +733,8 @@
             <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calling &#39;</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_log</span><span class="p">:</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calling &#39;</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 
         <span class="n">should_reapply</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">while</span> <span class="n">should_reapply</span><span class="p">:</span>
@@ -862,11 +864,7 @@
 
           <details class="quote">
             <summary>Source code in <code>retries/retry.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">271</span>
-<span class="normal">272</span>
-<span class="normal">273</span>
-<span class="normal">274</span>
-<span class="normal">275</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">275</span>
 <span class="normal">276</span>
 <span class="normal">277</span>
 <span class="normal">278</span>
@@ -893,7 +891,12 @@
 <span class="normal">299</span>
 <span class="normal">300</span>
 <span class="normal">301</span>
-<span class="normal">302</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">FuncT</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ReturnT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -914,7 +917,8 @@
         <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calling &#39;</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_log</span><span class="p">:</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calling &#39;</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 
     <span class="n">should_reapply</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">while</span> <span class="n">should_reapply</span><span class="p">:</span>
@@ -983,11 +987,7 @@
 
           <details class="quote">
             <summary>Source code in <code>retries/retry.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">247</span>
-<span class="normal">248</span>
-<span class="normal">249</span>
-<span class="normal">250</span>
-<span class="normal">251</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">251</span>
 <span class="normal">252</span>
 <span class="normal">253</span>
 <span class="normal">254</span>
@@ -1005,7 +1005,11 @@
 <span class="normal">266</span>
 <span class="normal">267</span>
 <span class="normal">268</span>
-<span class="normal">269</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">RetryState</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">RetryState</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Executes `func` from `state`</span>
 
@@ -1239,7 +1243,11 @@ Requires <code>__call__</code> implementation</p>
 <span class="normal">230</span>
 <span class="normal">231</span>
 <span class="normal">232</span>
-<span class="normal">233</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">BaseRetry</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Generic</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]):</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">BaseRetry</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Generic</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for all retry implementations.</span>
 <span class="sd">    Requires `__call__` implementation</span>
@@ -1266,6 +1274,7 @@ Requires <code>__call__</code> implementation</p>
         <span class="n">before_hooks</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">BeforeHookFuncT</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">after_hooks</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">AfterHookFuncT</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">retry_exception_hook</span><span class="p">:</span> <span class="n">RetryExceptionCallHook</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">should_log</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
@@ -1274,6 +1283,7 @@ Requires <code>__call__</code> implementation</p>
 <span class="sd">            before_hooks: Hooks to run before running `func`. Runs Before strategy.</span>
 <span class="sd">            after_hooks: Hooks to run after running `func`. Runs before strategy.</span>
 <span class="sd">            retry_exception_hook: Hook to run when `func` raised an exception. Runs before strategy.</span>
+<span class="sd">            should_log: Specifies whether retry should log actions</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">strategies</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">strategies</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">on_exceptions</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">on_exceptions</span> <span class="ow">or</span> <span class="p">[])</span> <span class="ow">or</span> <span class="kc">None</span>
@@ -1281,6 +1291,7 @@ Requires <code>__call__</code> implementation</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">before_hooks</span> <span class="o">=</span> <span class="n">before_hooks</span> <span class="ow">or</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">after_hooks</span> <span class="o">=</span> <span class="n">after_hooks</span> <span class="ow">or</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">retry_exception_hook</span> <span class="o">=</span> <span class="n">retry_exception_hook</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">should_log</span> <span class="o">=</span> <span class="n">should_log</span>
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
@@ -1329,10 +1340,11 @@ Requires <code>__call__</code> implementation</p>
             <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span><span class="o">.</span><span class="n">should_stop</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">RetryStrategyExausted</span>
 
-            <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Executing &#39;</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; retry strategy. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;Current attempt </span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">current_attempts</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_log</span><span class="p">:</span>
+                <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Executing &#39;</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; retry strategy. &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Current attempt </span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">current_attempts</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
 
             <span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span><span class="o">.</span><span class="n">maybe_apply</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">returned_value</span><span class="p">)</span>
             <span class="n">state</span><span class="o">.</span><span class="n">current_attempts</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -1496,10 +1508,7 @@ Requires <code>__call__</code> implementation</p>
 
           <details class="quote">
             <summary>Source code in <code>retries/retry.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">118</span>
 <span class="normal">119</span>
 <span class="normal">120</span>
 <span class="normal">121</span>
@@ -1512,7 +1521,10 @@ Requires <code>__call__</code> implementation</p>
 <span class="normal">128</span>
 <span class="normal">129</span>
 <span class="normal">130</span>
-<span class="normal">131</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
 <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">FuncT</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">],</span>
@@ -1542,7 +1554,7 @@ Requires <code>__call__</code> implementation</p>
 
 
 <h3 id="retries.retry.BaseRetry.__init__" class="doc doc-heading">
-          <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">strategies</span><span class="o">=</span><span class="p">[],</span> <span class="n">on_exceptions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">before_hooks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">after_hooks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">retry_exception_hook</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+          <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">strategies</span><span class="o">=</span><span class="p">[],</span> <span class="n">on_exceptions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">before_hooks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">after_hooks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">retry_exception_hook</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">should_log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
 
 </h3>
 
@@ -1633,6 +1645,20 @@ Requires <code>__call__</code> implementation</p>
                 <code>None</code>
           </td>
         </tr>
+        <tr>
+          <td><code>should_log</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Specifies whether retry should log actions</p>
+            </div>
+          </td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
     </tbody>
   </table>
 
@@ -1659,13 +1685,17 @@ Requires <code>__call__</code> implementation</p>
 <span class="normal">110</span>
 <span class="normal">111</span>
 <span class="normal">112</span>
-<span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">strategies</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Strategy</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[],</span>
     <span class="n">on_exceptions</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">type</span><span class="p">[</span><span class="ne">Exception</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">before_hooks</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">BeforeHookFuncT</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">after_hooks</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">AfterHookFuncT</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">retry_exception_hook</span><span class="p">:</span> <span class="n">RetryExceptionCallHook</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">should_log</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Args:</span>
@@ -1674,6 +1704,7 @@ Requires <code>__call__</code> implementation</p>
 <span class="sd">        before_hooks: Hooks to run before running `func`. Runs Before strategy.</span>
 <span class="sd">        after_hooks: Hooks to run after running `func`. Runs before strategy.</span>
 <span class="sd">        retry_exception_hook: Hook to run when `func` raised an exception. Runs before strategy.</span>
+<span class="sd">        should_log: Specifies whether retry should log actions</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">strategies</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">strategies</span><span class="p">))</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">on_exceptions</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">on_exceptions</span> <span class="ow">or</span> <span class="p">[])</span> <span class="ow">or</span> <span class="kc">None</span>
@@ -1681,6 +1712,7 @@ Requires <code>__call__</code> implementation</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">before_hooks</span> <span class="o">=</span> <span class="n">before_hooks</span> <span class="ow">or</span> <span class="p">[]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">after_hooks</span> <span class="o">=</span> <span class="n">after_hooks</span> <span class="ow">or</span> <span class="p">[]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">retry_exception_hook</span> <span class="o">=</span> <span class="n">retry_exception_hook</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">should_log</span> <span class="o">=</span> <span class="n">should_log</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -1761,11 +1793,7 @@ Requires <code>__call__</code> implementation</p>
 
           <details class="quote">
             <summary>Source code in <code>retries/retry.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">176</span>
-<span class="normal">177</span>
-<span class="normal">178</span>
-<span class="normal">179</span>
-<span class="normal">180</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">180</span>
 <span class="normal">181</span>
 <span class="normal">182</span>
 <span class="normal">183</span>
@@ -1788,7 +1816,11 @@ Requires <code>__call__</code> implementation</p>
 <span class="normal">200</span>
 <span class="normal">201</span>
 <span class="normal">202</span>
-<span class="normal">203</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">RetryState</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">RetryState</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks if last state raised an exception and executes the next available strategy</span>
 
@@ -1894,10 +1926,7 @@ Requires <code>__call__</code> implementation</p>
 
           <details class="quote">
             <summary>Source code in <code>retries/retry.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">145</span>
 <span class="normal">146</span>
 <span class="normal">147</span>
 <span class="normal">148</span>
@@ -1926,7 +1955,11 @@ Requires <code>__call__</code> implementation</p>
 <span class="normal">171</span>
 <span class="normal">172</span>
 <span class="normal">173</span>
-<span class="normal">174</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">exec_strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">RetryState</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]):</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">exec_strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">RetryState</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Applies user defined strategies.</span>
 
@@ -1946,10 +1979,11 @@ Requires <code>__call__</code> implementation</p>
         <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span><span class="o">.</span><span class="n">should_stop</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">RetryStrategyExausted</span>
 
-        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Executing &#39;</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; retry strategy. &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;Current attempt </span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">current_attempts</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_log</span><span class="p">:</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Executing &#39;</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; retry strategy. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Current attempt </span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">current_attempts</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
 
         <span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span><span class="o">.</span><span class="n">maybe_apply</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">returned_value</span><span class="p">)</span>
         <span class="n">state</span><span class="o">.</span><span class="n">current_attempts</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -2013,14 +2047,14 @@ Requires <code>__call__</code> implementation</p>
 
           <details class="quote">
             <summary>Source code in <code>retries/retry.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">136</span>
 <span class="normal">137</span>
 <span class="normal">138</span>
 <span class="normal">139</span>
-<span class="normal">140</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">save_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">RetryState</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">save_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">RetryState</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Saves retry state to `func`</span>
 
@@ -2072,12 +2106,7 @@ Requires <code>__call__</code> implementation</p>
 
             <details class="quote">
               <summary>Source code in <code>retries/retry.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">305</span>
-<span class="normal">306</span>
-<span class="normal">307</span>
-<span class="normal">308</span>
-<span class="normal">309</span>
-<span class="normal">310</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">310</span>
 <span class="normal">311</span>
 <span class="normal">312</span>
 <span class="normal">313</span>
@@ -2134,7 +2163,13 @@ Requires <code>__call__</code> implementation</p>
 <span class="normal">364</span>
 <span class="normal">365</span>
 <span class="normal">366</span>
-<span class="normal">367</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Retry</span><span class="p">(</span><span class="n">BaseRetry</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]):</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Retry</span><span class="p">(</span><span class="n">BaseRetry</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Synchronous retry</span>
 
@@ -2186,7 +2221,8 @@ Requires <code>__call__</code> implementation</p>
             <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calling &#39;</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_log</span><span class="p">:</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calling &#39;</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 
         <span class="n">should_reapply</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">while</span> <span class="n">should_reapply</span><span class="p">:</span>
@@ -2312,12 +2348,7 @@ Requires <code>__call__</code> implementation</p>
 
           <details class="quote">
             <summary>Source code in <code>retries/retry.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">336</span>
-<span class="normal">337</span>
-<span class="normal">338</span>
-<span class="normal">339</span>
-<span class="normal">340</span>
-<span class="normal">341</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">341</span>
 <span class="normal">342</span>
 <span class="normal">343</span>
 <span class="normal">344</span>
@@ -2343,7 +2374,13 @@ Requires <code>__call__</code> implementation</p>
 <span class="normal">364</span>
 <span class="normal">365</span>
 <span class="normal">366</span>
-<span class="normal">367</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">FuncT</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ReturnT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -2364,7 +2401,8 @@ Requires <code>__call__</code> implementation</p>
         <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calling &#39;</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_log</span><span class="p">:</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calling &#39;</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 
     <span class="n">should_reapply</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">while</span> <span class="n">should_reapply</span><span class="p">:</span>
@@ -2429,12 +2467,7 @@ Requires <code>__call__</code> implementation</p>
 
           <details class="quote">
             <summary>Source code in <code>retries/retry.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">316</span>
-<span class="normal">317</span>
-<span class="normal">318</span>
-<span class="normal">319</span>
-<span class="normal">320</span>
-<span class="normal">321</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">321</span>
 <span class="normal">322</span>
 <span class="normal">323</span>
 <span class="normal">324</span>
@@ -2447,7 +2480,12 @@ Requires <code>__call__</code> implementation</p>
 <span class="normal">331</span>
 <span class="normal">332</span>
 <span class="normal">333</span>
-<span class="normal">334</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">RetryState</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">RetryState</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Executes `func` from `state`</span>
 
@@ -2862,13 +2900,7 @@ Requires <code>__call__</code> implementation</p>
 
           <details class="quote">
             <summary>Source code in <code>retries/retry.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">370</span>
-<span class="normal">371</span>
-<span class="normal">372</span>
-<span class="normal">373</span>
-<span class="normal">374</span>
-<span class="normal">375</span>
-<span class="normal">376</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">376</span>
 <span class="normal">377</span>
 <span class="normal">378</span>
 <span class="normal">379</span>
@@ -2893,7 +2925,13 @@ Requires <code>__call__</code> implementation</p>
 <span class="normal">398</span>
 <span class="normal">399</span>
 <span class="normal">400</span>
-<span class="normal">401</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">retry</span><span class="p">(</span><span class="n">strategies</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Strategy</span><span class="p">]):</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">retry</span><span class="p">(</span><span class="n">strategies</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Strategy</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retry decorator. Works both for sync and async functions</span>
 
