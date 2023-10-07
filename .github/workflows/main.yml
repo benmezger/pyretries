@@ -13,11 +13,6 @@ jobs:
         with:
           python-version: 3.11
 
-      # Cache the installation of Poetry itself, e.g. the next step. This prevents the workflow
-      # from installing Poetry every time, which can be slow. Note the use of the Poetry version
-      # number in the cache key, and the "-0" suffix: this allows you to invalidate the cache
-      # manually if/when you want to upgrade Poetry, or if something goes wrong. This could be
-      # mildly cleaner by using an environment variable, but I don't really care.
       - name: cache poetry install
         uses: actions/cache@v2
         with:
