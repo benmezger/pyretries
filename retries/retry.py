@@ -234,7 +234,15 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
 
 
 class AsyncRetry(BaseRetry[ReturnT]):
-    """Asynchronous retry"""
+    """
+    Asynchronous retry
+
+    Examples:
+        >>> async def ok() -> bool:
+        ...    return True
+        >>> retry = AsyncRetry[t.Awaitable[bool]](strategies=[StopAfterAttemptStrategy(20)])
+        >>> print(await retry(ok))
+    """
 
     async def exec(self, state: RetryState[ReturnT]) -> None:
         """
@@ -295,7 +303,15 @@ class AsyncRetry(BaseRetry[ReturnT]):
 
 
 class Retry(BaseRetry[ReturnT]):
-    """Synchronous retry"""
+    """
+    Synchronous retry
+
+    Examples:
+        >>> async def ok() -> bool:
+        ...    return True
+        >>> retry = Retry[bool](strategies=[StopAfterAttemptStrategy(20)])
+        >>> print(retry(ok))
+    """
 
     def exec(self, state: RetryState[ReturnT]) -> None:
         """
@@ -357,8 +373,8 @@ def retry(strategies: t.Sequence[Strategy]):
 
     Examples:
         >>> @retry(strategies=[strategy.NoopStrategy(1)])
-            def ok() -> bool:
-                return True
+        ... def ok() -> bool:
+        ...     return True
         >>> ok()
         INFO:retries.retry:Calling 'ok'
         True
