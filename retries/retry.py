@@ -96,6 +96,7 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
         before_hooks: t.Sequence[BeforeHookFuncT] | None = None,
         after_hooks: t.Sequence[AfterHookFuncT[ReturnT]] | None = None,
         retry_exception_hook: RetryExceptionCallHook | None = None,
+        should_log: bool = True,
     ) -> None:
         """
         Args:
@@ -104,6 +105,7 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
             before_hooks: Hooks to run before running `func`. Runs Before strategy.
             after_hooks: Hooks to run after running `func`. Runs before strategy.
             retry_exception_hook: Hook to run when `func` raised an exception. Runs before strategy.
+            should_log: Specifies whether retry should log actions
         """
         self.strategies = list(reversed(strategies))
         self.on_exceptions = set(on_exceptions or []) or None
@@ -111,6 +113,7 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
         self.before_hooks = before_hooks or []
         self.after_hooks = after_hooks or []
         self.retry_exception_hook = retry_exception_hook
+        self.should_log = should_log
 
     @abc.abstractmethod
     def __call__(
@@ -159,10 +162,11 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
             if state.strategy_func.should_stop:
                 raise RetryStrategyExausted
 
-            _logger.info(
-                f"Executing '{state.strategy_func.__class__.__name__}' retry strategy. "
-                f"Current attempt {state.current_attempts}"
-            )
+            if self.should_log:
+                _logger.info(
+                    f"Executing '{state.strategy_func.__class__.__name__}' retry strategy. "
+                    f"Current attempt {state.current_attempts}"
+                )
 
             state.strategy_func.maybe_apply(state.returned_value)
             state.current_attempts += 1
@@ -289,7 +293,8 @@ class AsyncRetry(BaseRetry[ReturnT]):
             kwargs=kwargs,
         )
 
-        _logger.info(f"Calling '{func.__name__}'")
+        if self.should_log:
+            _logger.info(f"Calling '{func.__name__}'")
 
         should_reapply = True
         while should_reapply:
@@ -354,7 +359,8 @@ class Retry(BaseRetry[ReturnT]):
             kwargs=kwargs,
         )
 
-        _logger.info(f"Calling '{func.__name__}'")
+        if self.should_log:
+            _logger.info(f"Calling '{func.__name__}'")
 
         should_reapply = True
         while should_reapply:
