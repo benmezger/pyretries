@@ -194,17 +194,15 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
                                 or when strategy raises
         """
         try:
-            if state.raised:
-                if (exc := state.exception.__class__) not in (
-                    self.on_exceptions or [exc]
-                ):
-                    raise RetryExaustedError from state.exception
-
-                self.exec_strategy(state)
-                state.clear()
-                return True
-            else:
+            if not state.raised:
                 return False
+
+            if (exc := state.exception.__class__) not in (self.on_exceptions or [exc]):
+                raise RetryExaustedError from state.exception
+
+            self.exec_strategy(state)
+            state.clear()
+            return True
 
         except RetryExaustedError as err:
             raise err from state.exception if state.raised else None
