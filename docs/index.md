@@ -1,5 +1,7 @@
 # Retries
 
+![Github actions](https://github.com/benmezger/retry/actions/workflows/main.yml/badge.svg)
+
 A retry library for Python. This library allows:
 
 1. Creating custom strategies
