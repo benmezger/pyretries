@@ -315,7 +315,7 @@ class Retry(BaseRetry[ReturnT]):
     Synchronous retry
 
     Examples:
-        >>> async def ok() -> bool:
+        >>> def ok() -> bool:
         ...    return True
         >>> retry = Retry[bool](strategies=[StopAfterAttemptStrategy(20)])
         >>> print(retry(ok))
