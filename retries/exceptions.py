@@ -11,4 +11,6 @@ class RetryExaustedError(BaseException):
 
 
 class RetryStrategyExausted(BaseException):
+    """Raised when the strategy was exausted"""
+
     ...
