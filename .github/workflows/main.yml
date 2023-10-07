@@ -40,6 +40,15 @@ jobs:
       - run: poetry install --no-interaction --no-root
         if: steps.cache-deps.outputs.cache-hit != 'true'
 
-      - run: poetry install --no-interaction
+      - name: Install dependencies
+        run: poetry install --no-interaction
 
-      - run: poetry run task check
+      - name: Run check
+        run: poetry run task check
+
+      - name: Publish
+        env:
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          poetry config pypi-token.pypi $PYPI_TOKEN
+          poetry publish --build
