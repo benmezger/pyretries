@@ -610,7 +610,9 @@
 
             <details class="quote">
               <summary>Source code in <code>retries/retry.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">245</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
 <span class="normal">246</span>
 <span class="normal">247</span>
 <span class="normal">248</span>
@@ -675,9 +677,7 @@
 <span class="normal">307</span>
 <span class="normal">308</span>
 <span class="normal">309</span>
-<span class="normal">310</span>
-<span class="normal">311</span>
-<span class="normal">312</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">AsyncRetry</span><span class="p">(</span><span class="n">BaseRetry</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]):</span>
+<span class="normal">310</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">AsyncRetry</span><span class="p">(</span><span class="n">BaseRetry</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Asynchronous retry</span>
 
@@ -864,7 +864,9 @@
 
           <details class="quote">
             <summary>Source code in <code>retries/retry.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">280</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
 <span class="normal">281</span>
 <span class="normal">282</span>
 <span class="normal">283</span>
@@ -894,9 +896,7 @@
 <span class="normal">307</span>
 <span class="normal">308</span>
 <span class="normal">309</span>
-<span class="normal">310</span>
-<span class="normal">311</span>
-<span class="normal">312</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
+<span class="normal">310</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">FuncT</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ReturnT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -987,7 +987,9 @@
 
           <details class="quote">
             <summary>Source code in <code>retries/retry.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">256</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
 <span class="normal">257</span>
 <span class="normal">258</span>
 <span class="normal">259</span>
@@ -1007,9 +1009,7 @@
 <span class="normal">273</span>
 <span class="normal">274</span>
 <span class="normal">275</span>
-<span class="normal">276</span>
-<span class="normal">277</span>
-<span class="normal">278</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">RetryState</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">276</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">RetryState</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Executes `func` from `state`</span>
 
@@ -1247,9 +1247,7 @@ Requires <code>__call__</code> implementation</p>
 <span class="normal">237</span>
 <span class="normal">238</span>
 <span class="normal">239</span>
-<span class="normal">240</span>
-<span class="normal">241</span>
-<span class="normal">242</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">BaseRetry</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Generic</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]):</span>
+<span class="normal">240</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">BaseRetry</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Generic</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for all retry implementations.</span>
 <span class="sd">    Requires `__call__` implementation</span>
@@ -1371,17 +1369,15 @@ Requires <code>__call__</code> implementation</p>
 <span class="sd">                                or when strategy raises</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">raised</span><span class="p">:</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">exc</span> <span class="o">:=</span> <span class="n">state</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">on_exceptions</span> <span class="ow">or</span> <span class="p">[</span><span class="n">exc</span><span class="p">]</span>
-                <span class="p">):</span>
-                    <span class="k">raise</span> <span class="n">RetryExaustedError</span> <span class="kn">from</span> <span class="nn">state.exception</span>
-
-                <span class="bp">self</span><span class="o">.</span><span class="n">exec_strategy</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
-                <span class="n">state</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-                <span class="k">return</span> <span class="kc">True</span>
-            <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">state</span><span class="o">.</span><span class="n">raised</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">exc</span> <span class="o">:=</span> <span class="n">state</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">on_exceptions</span> <span class="ow">or</span> <span class="p">[</span><span class="n">exc</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="n">RetryExaustedError</span> <span class="kn">from</span> <span class="nn">state.exception</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">exec_strategy</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+            <span class="n">state</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="k">return</span> <span class="kc">True</span>
 
         <span class="k">except</span> <span class="n">RetryExaustedError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">err</span> <span class="kn">from</span> <span class="nn">state.exception</span> <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">raised</span> <span class="k">else</span> <span class="kc">None</span>
@@ -1822,9 +1818,7 @@ Requires <code>__call__</code> implementation</p>
 <span class="normal">205</span>
 <span class="normal">206</span>
 <span class="normal">207</span>
-<span class="normal">208</span>
-<span class="normal">209</span>
-<span class="normal">210</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">RetryState</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">208</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">RetryState</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks if last state raised an exception and executes the next available strategy</span>
 
@@ -1838,17 +1832,15 @@ Requires <code>__call__</code> implementation</p>
 <span class="sd">                            or when strategy raises</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">raised</span><span class="p">:</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">exc</span> <span class="o">:=</span> <span class="n">state</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">on_exceptions</span> <span class="ow">or</span> <span class="p">[</span><span class="n">exc</span><span class="p">]</span>
-            <span class="p">):</span>
-                <span class="k">raise</span> <span class="n">RetryExaustedError</span> <span class="kn">from</span> <span class="nn">state.exception</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">exec_strategy</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
-            <span class="n">state</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">state</span><span class="o">.</span><span class="n">raised</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">exc</span> <span class="o">:=</span> <span class="n">state</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">on_exceptions</span> <span class="ow">or</span> <span class="p">[</span><span class="n">exc</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="n">RetryExaustedError</span> <span class="kn">from</span> <span class="nn">state.exception</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">exec_strategy</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="n">state</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">True</span>
 
     <span class="k">except</span> <span class="n">RetryExaustedError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">err</span> <span class="kn">from</span> <span class="nn">state.exception</span> <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">raised</span> <span class="k">else</span> <span class="kc">None</span>
@@ -2110,7 +2102,9 @@ Requires <code>__call__</code> implementation</p>
 
             <details class="quote">
               <summary>Source code in <code>retries/retry.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">315</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
 <span class="normal">316</span>
 <span class="normal">317</span>
 <span class="normal">318</span>
@@ -2171,9 +2165,7 @@ Requires <code>__call__</code> implementation</p>
 <span class="normal">373</span>
 <span class="normal">374</span>
 <span class="normal">375</span>
-<span class="normal">376</span>
-<span class="normal">377</span>
-<span class="normal">378</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Retry</span><span class="p">(</span><span class="n">BaseRetry</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]):</span>
+<span class="normal">376</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Retry</span><span class="p">(</span><span class="n">BaseRetry</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Synchronous retry</span>
 
@@ -2352,7 +2344,9 @@ Requires <code>__call__</code> implementation</p>
 
           <details class="quote">
             <summary>Source code in <code>retries/retry.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">346</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
 <span class="normal">347</span>
 <span class="normal">348</span>
 <span class="normal">349</span>
@@ -2382,9 +2376,7 @@ Requires <code>__call__</code> implementation</p>
 <span class="normal">373</span>
 <span class="normal">374</span>
 <span class="normal">375</span>
-<span class="normal">376</span>
-<span class="normal">377</span>
-<span class="normal">378</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
+<span class="normal">376</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">FuncT</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ReturnT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -2471,7 +2463,9 @@ Requires <code>__call__</code> implementation</p>
 
           <details class="quote">
             <summary>Source code in <code>retries/retry.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">326</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
 <span class="normal">327</span>
 <span class="normal">328</span>
 <span class="normal">329</span>
@@ -2487,9 +2481,7 @@ Requires <code>__call__</code> implementation</p>
 <span class="normal">339</span>
 <span class="normal">340</span>
 <span class="normal">341</span>
-<span class="normal">342</span>
-<span class="normal">343</span>
-<span class="normal">344</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">RetryState</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">342</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">RetryState</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Executes `func` from `state`</span>
 
@@ -2924,7 +2916,9 @@ Requires <code>__call__</code> implementation</p>
 
           <details class="quote">
             <summary>Source code in <code>retries/retry.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">381</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
 <span class="normal">382</span>
 <span class="normal">383</span>
 <span class="normal">384</span>
@@ -2953,9 +2947,7 @@ Requires <code>__call__</code> implementation</p>
 <span class="normal">407</span>
 <span class="normal">408</span>
 <span class="normal">409</span>
-<span class="normal">410</span>
-<span class="normal">411</span>
-<span class="normal">412</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">retry</span><span class="p">(</span><span class="n">strategies</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Strategy</span><span class="p">]):</span>
+<span class="normal">410</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">retry</span><span class="p">(</span><span class="n">strategies</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Strategy</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retry decorator. Works both for sync and async functions</span>
 
