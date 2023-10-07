@@ -10,7 +10,7 @@ repository = "https://github.com/benmezger/pyretries"
 documentation = "https://benmezger.github.io/pyretries"
 keywords = ["retry", "python"]
 classifiers = [
-    "Software Development :: Libraries :: Python Modules"
+    "Topic :: Software Development :: Libraries :: Python Modules"
 ]
 
 [tool.poetry.dependencies]
