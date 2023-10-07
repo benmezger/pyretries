@@ -20,6 +20,7 @@ pytest-cov = "^4.1.0"
 mkdocs = "^1.5.3"
 mkdocstrings = {version = "^0.23.0", extras = ["python"]}
 mkdocs-material = "^9.4.4"
+freezegun = "^1.2.2"
 
 [build-system]
 requires = ["poetry-core"]

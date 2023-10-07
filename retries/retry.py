@@ -33,7 +33,8 @@ class RetryState(t.Generic[ReturnT]):
         func: Function address to retry
         args: `func` non-positional arguments
         kwargs: `func` positional arguments
-        start_time: Timestamp of when `func` was called
+        start_time: Timestamp when retry first started
+        end_time: Timestamp when retry ended
         strategy_func: Next strategy to run
         current_attempts: Number of current retry attempts
         exception: Exception raised by `func`
@@ -42,6 +43,7 @@ class RetryState(t.Generic[ReturnT]):
 
     func: FuncT[ReturnT]
     start_time: int
+    end_time: int = 0
     strategy_func: Strategy[ReturnT] | None = None
     args: t.Sequence[t.Any] | None = None
     kwargs: t.Dict[str, t.Any] | None = None
@@ -63,6 +65,7 @@ class RetryState(t.Generic[ReturnT]):
         cls_name = type(self).__name__
         return (
             f"{cls_name}(start_time={self.start_time}, "
+            f"end_time={self.end_time}, "
             f"current_attempts={self.current_attempts}, "
             f"exception={repr(self.exception)}), "
             f"returned_value={self.returned_value})"
@@ -235,6 +238,8 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
 
         for hook in self.after_hooks:
             hook(state.exception or state.returned_value)
+
+        state.end_time = int(datetime.now().timestamp())
 
 
 class AsyncRetry(BaseRetry[ReturnT]):

@@ -7,6 +7,7 @@ import typing as t
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from freezegun import freeze_time
 
 from retries.exceptions import RetryExaustedError
 from retries.retry import (
@@ -104,6 +105,7 @@ async def test_async_retry_runs_func_with_args(
 
 
 @pytest.mark.asyncio
+@freeze_time("2012-01-14 12:00:01")
 async def test_async_sets_state(
     async_retry: t.Callable[..., AsyncRetry[t.Any]], async_func: AsyncMock
 ) -> None:
@@ -114,6 +116,9 @@ async def test_async_sets_state(
 
     state: RetryState = async_func.state
     state.returned_value = 4
+
+    assert state.start_time == 1326542401
+    assert state.end_time == 1326542401
 
 
 @pytest.mark.asyncio
@@ -324,6 +329,7 @@ def test_sync_retry_runs_func_with_args(
     assert func.call_args.kwargs == kwargs
 
 
+@freeze_time("2012-01-14 12:00:01")
 def test_sync_sets_state(
     sync_retry: t.Callable[..., Retry[t.Any]], func: MagicMock
 ) -> None:
@@ -334,6 +340,9 @@ def test_sync_sets_state(
 
     state: RetryState = func.state
     state.returned_value = 4
+
+    assert state.start_time == 1326542401
+    assert state.end_time == 1326542401
 
 
 def test_sync_retry_raises_exception(
@@ -499,5 +508,5 @@ def test_retry_state_repr():
     state = RetryState(lambda: None, 1, returned_value=1, exception=ValueError("ABC"))
     assert (
         repr(state)
-        == "RetryState(start_time=1, current_attempts=0, exception=ValueError('ABC')), returned_value=1)"
+        == "RetryState(start_time=1, end_time=0, current_attempts=0, exception=ValueError('ABC')), returned_value=1)"
     )
