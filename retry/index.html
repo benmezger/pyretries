@@ -2128,7 +2128,7 @@ Requires <code>__call__</code> implementation</p>
 
 
 <p><strong>Examples:</strong></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">ok</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">ok</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="gp">... </span>   <span class="k">return</span> <span class="kc">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">retry</span> <span class="o">=</span> <span class="n">Retry</span><span class="p">[</span><span class="nb">bool</span><span class="p">](</span><span class="n">strategies</span><span class="o">=</span><span class="p">[</span><span class="n">StopAfterAttemptStrategy</span><span class="p">(</span><span class="mi">20</span><span class="p">)])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">retry</span><span class="p">(</span><span class="n">ok</span><span class="p">))</span>
@@ -2204,7 +2204,7 @@ Requires <code>__call__</code> implementation</p>
 <span class="sd">    Synchronous retry</span>
 
 <span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; async def ok() -&gt; bool:</span>
+<span class="sd">        &gt;&gt;&gt; def ok() -&gt; bool:</span>
 <span class="sd">        ...    return True</span>
 <span class="sd">        &gt;&gt;&gt; retry = Retry[bool](strategies=[StopAfterAttemptStrategy(20)])</span>
 <span class="sd">        &gt;&gt;&gt; print(retry(ok))</span>
@@ -2874,7 +2874,7 @@ Requires <code>__call__</code> implementation</p>
 
 
 <h2 id="pyretries.retry.retry" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">retry</span><span class="p">(</span><span class="n">strategies</span><span class="p">)</span></code>
+          <code class="highlight language-python"><span class="n">retry</span><span class="p">(</span><span class="n">strategies</span><span class="o">=</span><span class="p">[],</span> <span class="n">on_exceptions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">before_hooks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">after_hooks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">retry_exception_hook</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">should_log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2914,11 +2914,81 @@ Requires <code>__call__</code> implementation</p>
           </td>
           <td>
             <div class="doc-md-description">
-              <p>A sequence of retry strategies</p>
+              <p>Sequence of retry strategies</p>
             </div>
           </td>
           <td>
-              <em>required</em>
+                <code>[]</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>on_exceptions</code></td>
+          <td>
+                <code><span title="typing.Sequence">Sequence</span>[type[Exception]] | None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Sequence of exceptions to apply a retry strategy.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>before_hooks</code></td>
+          <td>
+                <code><span title="typing.Sequence">Sequence</span>[<span title="pyretries.retry.BeforeHookFuncT">BeforeHookFuncT</span>] | None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Hooks to run before running <code>func</code>. Runs Before strategy.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>after_hooks</code></td>
+          <td>
+                <code><span title="typing.Sequence">Sequence</span>[<span title="pyretries.retry.AfterHookFuncT">AfterHookFuncT</span>[<span title="pyretries.retry.ReturnT">ReturnT</span>]] | None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Hooks to run after running <code>func</code>. Runs before strategy.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>retry_exception_hook</code></td>
+          <td>
+                <code><span title="pyretries.retry.RetryExceptionCallHook">RetryExceptionCallHook</span> | None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Hook to run when <code>func</code> raised an exception. Runs before strategy.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>should_log</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Specifies whether retry should log actions</p>
+            </div>
+          </td>
+          <td>
+                <code>True</code>
           </td>
         </tr>
     </tbody>
@@ -2981,7 +3051,40 @@ Requires <code>__call__</code> implementation</p>
 <span class="normal">407</span>
 <span class="normal">408</span>
 <span class="normal">409</span>
-<span class="normal">410</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">retry</span><span class="p">(</span><span class="n">strategies</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Strategy</span><span class="p">]):</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">retry</span><span class="p">(</span>
+    <span class="n">strategies</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Strategy</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="n">on_exceptions</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">type</span><span class="p">[</span><span class="ne">Exception</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">before_hooks</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">BeforeHookFuncT</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">after_hooks</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">AfterHookFuncT</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">retry_exception_hook</span><span class="p">:</span> <span class="n">RetryExceptionCallHook</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">should_log</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retry decorator. Works both for sync and async functions</span>
 
@@ -2994,7 +3097,12 @@ Requires <code>__call__</code> implementation</p>
 <span class="sd">        True</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        strategies: A sequence of retry strategies</span>
+<span class="sd">        strategies: Sequence of retry strategies</span>
+<span class="sd">        on_exceptions: Sequence of exceptions to apply a retry strategy.</span>
+<span class="sd">        before_hooks: Hooks to run before running `func`. Runs Before strategy.</span>
+<span class="sd">        after_hooks: Hooks to run after running `func`. Runs before strategy.</span>
+<span class="sd">        retry_exception_hook: Hook to run when `func` raised an exception. Runs before strategy.</span>
+<span class="sd">        should_log: Specifies whether retry should log actions</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        func (FuncT[ReturnT]): Functions return value or exception</span>
@@ -3006,9 +3114,23 @@ Requires <code>__call__</code> implementation</p>
         <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
         <span class="k">def</span> <span class="nf">wrapper_retry</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">iscoroutinefunction</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">AsyncRetry</span><span class="p">(</span><span class="n">strategies</span><span class="o">=</span><span class="n">strategies</span><span class="p">)(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">AsyncRetry</span><span class="p">(</span>
+                    <span class="n">strategies</span><span class="o">=</span><span class="n">strategies</span><span class="p">,</span>
+                    <span class="n">on_exceptions</span><span class="o">=</span><span class="n">on_exceptions</span><span class="p">,</span>
+                    <span class="n">before_hooks</span><span class="o">=</span><span class="n">before_hooks</span><span class="p">,</span>
+                    <span class="n">after_hooks</span><span class="o">=</span><span class="n">after_hooks</span><span class="p">,</span>
+                    <span class="n">retry_exception_hook</span><span class="o">=</span><span class="n">retry_exception_hook</span><span class="p">,</span>
+                    <span class="n">should_log</span><span class="o">=</span><span class="n">should_log</span><span class="p">,</span>
+                <span class="p">)(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-            <span class="k">return</span> <span class="n">Retry</span><span class="p">(</span><span class="n">strategies</span><span class="o">=</span><span class="n">strategies</span><span class="p">)(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Retry</span><span class="p">(</span>
+                <span class="n">strategies</span><span class="o">=</span><span class="n">strategies</span><span class="p">,</span>
+                <span class="n">on_exceptions</span><span class="o">=</span><span class="n">on_exceptions</span><span class="p">,</span>
+                <span class="n">before_hooks</span><span class="o">=</span><span class="n">before_hooks</span><span class="p">,</span>
+                <span class="n">after_hooks</span><span class="o">=</span><span class="n">after_hooks</span><span class="p">,</span>
+                <span class="n">retry_exception_hook</span><span class="o">=</span><span class="n">retry_exception_hook</span><span class="p">,</span>
+                <span class="n">should_log</span><span class="o">=</span><span class="n">should_log</span><span class="p">,</span>
+            <span class="p">)(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">FuncT</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">],</span> <span class="n">wrapper_retry</span><span class="p">)</span>
 
