@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "retries"
+name = "pyretries"
 version = "0.1.0"
 description = "A Python retry package based on strategies"
 authors = ["Ben Mezger <me@benmezger.nl>"]

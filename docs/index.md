@@ -1,6 +1,6 @@
 # Retries
 
-![Github actions](https://github.com/benmezger/retry/actions/workflows/main.yml/badge.svg)
+![Github actions](https://github.com/benmezger/pyretries/actions/workflows/main.yml/badge.svg)
 
 A retry library for Python. This library allows:
 
