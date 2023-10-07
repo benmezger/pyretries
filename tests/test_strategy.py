@@ -8,8 +8,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from retries import strategy
-from retries.exceptions import RetryStrategyExausted
+from pyretries import strategy
+from pyretries.exceptions import RetryStrategyExausted
 
 
 class TestSleepStrategy:

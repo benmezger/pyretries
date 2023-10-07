@@ -9,8 +9,8 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 from freezegun import freeze_time
 
-from retries.exceptions import RetryExaustedError
-from retries.retry import (
+from pyretries.exceptions import RetryExaustedError
+from pyretries.retry import (
     AfterHookFuncT,
     AsyncRetry,
     BeforeHookFuncT,
@@ -19,7 +19,7 @@ from retries.retry import (
     RetryState,
     retry,
 )
-from retries.strategy import NoopStrategy, Strategy
+from pyretries.strategy import NoopStrategy, Strategy
 
 
 @pytest.fixture

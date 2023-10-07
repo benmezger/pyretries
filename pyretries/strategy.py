@@ -10,7 +10,7 @@ import random
 import time
 import typing as t
 
-from retries.exceptions import RetryStrategyExausted
+from pyretries.exceptions import RetryStrategyExausted
 
 _logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)

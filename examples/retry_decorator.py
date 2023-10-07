@@ -5,8 +5,8 @@
 
 import asyncio
 
-from retries.retry import retry
-from retries.strategy import StopAfterAttemptStrategy
+from pyretries.retry import retry
+from pyretries.strategy import StopAfterAttemptStrategy
 
 _counter = -1
 

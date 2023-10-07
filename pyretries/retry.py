@@ -11,8 +11,8 @@ import typing as t
 from dataclasses import dataclass
 from datetime import datetime
 
-from retries.exceptions import RetryExaustedError, RetryStrategyExausted
-from retries.strategy import Strategy
+from pyretries.exceptions import RetryExaustedError, RetryStrategyExausted
+from pyretries.strategy import Strategy
 
 ConditionT = t.TypeVar("ConditionT")
 ReturnT = t.TypeVar("ReturnT")
