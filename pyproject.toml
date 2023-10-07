@@ -1,9 +1,10 @@
 [tool.poetry]
 name = "retries"
-version = "0.0.0"
-description = ""
+version = "0.1.0"
+description = "A Python retry package based on strategies"
 authors = ["Ben Mezger <me@benmezger.nl>"]
 readme = "README.md"
+packages = [{include = "retries"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
