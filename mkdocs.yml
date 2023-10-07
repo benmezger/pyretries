@@ -1,0 +1,12 @@
+site_name: Retries
+
+plugins:
+- mkdocstrings:
+    handlers:
+      python:
+        options:
+          show_docstring_raises: true
+        paths: [retries]
+
+theme:
+  name: material

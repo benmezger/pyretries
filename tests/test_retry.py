@@ -493,3 +493,11 @@ def test_retry_sync_decorator(monkeypatch) -> None:
 
     assert retry(strategies=[])(_test)()
     assert mock.call_count == 1
+
+
+def test_retry_state_repr():
+    state = RetryState(lambda: None, 1, returned_value=1, exception=ValueError("ABC"))
+    assert (
+        repr(state)
+        == "RetryState(start_time=1, current_attempts=0, exception=ValueError('ABC')), returned_value=1)"
+    )

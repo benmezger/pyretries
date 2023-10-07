@@ -27,6 +27,19 @@ _logger = logging.getLogger(__name__)
 
 @dataclass
 class RetryState(t.Generic[ReturnT]):
+    """Stores current retry state
+
+    Args:
+        func: Function address to retry
+        args: `func` non-positional arguments
+        kwargs: `func` positional arguments
+        start_time: Timestamp of when `func` was called
+        strategy_func: Next strategy to run
+        current_attempts: Number of current retry attempts
+        exception: Exception raised by `func`
+
+    """
+
     func: FuncT[ReturnT]
     start_time: int
     strategy_func: Strategy[ReturnT] | None = None
@@ -38,14 +51,42 @@ class RetryState(t.Generic[ReturnT]):
 
     @property
     def raised(self) -> bool:
+        """Checks if `func` raised an exception"""
         return isinstance(self.exception, Exception)
 
     def clear(self) -> None:
+        """Clears retry state"""
         self.exception = None
         self.returned_value = None
 
+    def __repr__(self) -> str:
+        cls_name = type(self).__name__
+        return (
+            f"{cls_name}(start_time={self.start_time}, "
+            f"current_attempts={self.current_attempts}, "
+            f"exception={repr(self.exception)}), "
+            f"returned_value={self.returned_value})"
+        )
+
 
 class BaseRetry(abc.ABC, t.Generic[ReturnT]):
+    """
+    Base class for all retry implementations.
+    Requires `__call__` implementation
+
+    Examples:
+        >>> Class RetryExample(BaseRetry[ReturnT]):
+                ...
+                def __call__(
+                    self,
+                    func: FuncT[ReturnT],
+                    *args: t.Tuple[t.Any],
+                    **kwargs: t.Dict[t.Any, t.Any],
+                ) -> ReturnT | Exception | None:
+                     ...
+
+    """
+
     on_exceptions: set[type[Exception]] | None
 
     def __init__(
@@ -56,6 +97,14 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
         after_hooks: t.Sequence[AfterHookFuncT[ReturnT]] | None = None,
         retry_exception_hook: RetryExceptionCallHook | None = None,
     ) -> None:
+        """
+        Args:
+            strategies: Sequence of retry strategies
+            on_exceptions: Sequence of exceptions to apply a retry strategy.
+            before_hooks: Hooks to run before running `func`. Runs Before strategy.
+            after_hooks: Hooks to run after running `func`. Runs before strategy.
+            retry_exception_hook: Hook to run when `func` raised an exception. Runs before strategy.
+        """
         self.strategies = list(reversed(strategies))
         self.on_exceptions = set(on_exceptions or []) or None
 
@@ -70,12 +119,36 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
         *args: t.Tuple[t.Any],
         **kwargs: t.Dict[t.Any, t.Any],
     ) -> ReturnT | Exception | None:
+        """
+        Executes `func` and applies strategies
+
+        Args:
+            func: Address to function
+            args: `func` non-positional arguments
+            kwargs: `func` positional arguments
+
+        """
         raise NotImplementedError
 
     def save_state(self, state: RetryState[ReturnT]) -> None:
+        """
+        Saves retry state to `func`
+
+        Args:
+            state: Current retry state
+        """
         setattr(state.func, "state", state)
 
     def exec_strategy(self, state: RetryState[ReturnT]):
+        """
+        Applies user defined strategies.
+
+        Args:
+            state: Current retry state
+
+        Raises:
+            RetryExaustedError: Raised when strategy is exausted of no strategy is available
+        """
         if state.strategy_func is None:
             if len(self.strategies):
                 state.strategy_func = self.strategies.pop()
@@ -101,6 +174,18 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
             raise RetryExaustedError
 
     def apply(self, state: RetryState[ReturnT]) -> bool:
+        """
+        Checks if last state raised an exception and executes the next available strategy
+
+        Raise `RetryExaustedError` if last executes strategy raised
+
+        Args:
+            state: Current retry state
+
+        Raises:
+            RetryExaustedError: Raised when `func` exception is not defined in `on_exceptions` sequence
+                                or when strategy raises
+        """
         try:
             if state.raised:
                 if (exc := state.exception.__class__) not in (
@@ -118,12 +203,26 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
             raise err from state.exception if state.raised else None
 
     def _pre_exec(self, _: RetryState[ReturnT]) -> None:
+        """
+        Should be called before running `func`
+
+        Args:
+            state: Current retry state. Currently not used.
+        """
         for hook in self.before_hooks:
             hook()
 
     def _post_exec(
         self, state: RetryState[ReturnT], exception: Exception | None
     ) -> None:
+        """
+        Should be called after running `func`.
+        If exception was raised, this should be passed in `exception` argument.
+
+        Args:
+            state: Current retry state. Currently not used.
+            exception: Raised exception
+        """
         if exception:
             state.exception = exception
 
@@ -135,7 +234,16 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
 
 
 class AsyncRetry(BaseRetry[ReturnT]):
+    """Asynchronous retry"""
+
     async def exec(self, state: RetryState[ReturnT]) -> None:
+        """
+        Executes `func` from `state`
+
+        Args:
+            state: Current retry state
+
+        """
         assert inspect.iscoroutinefunction(
             state.func
         ), f"{self.__class__.__name__} needs an awaitable func"
@@ -155,6 +263,17 @@ class AsyncRetry(BaseRetry[ReturnT]):
     async def __call__(
         self, func: FuncT[ReturnT], *args: t.Any, **kwargs: t.Any
     ) -> ReturnT | Exception | None:
+        """
+        Executes `func` and applies strategies
+
+        Args:
+            func: Address to function
+            args: `func` non-positional arguments
+            kwargs: `func` positional arguments
+
+        Returns:
+           Either `func`'s return value or None
+        """
         state = RetryState[ReturnT](
             func=func,
             start_time=int(datetime.now().timestamp()),
@@ -176,7 +295,16 @@ class AsyncRetry(BaseRetry[ReturnT]):
 
 
 class Retry(BaseRetry[ReturnT]):
+    """Synchronous retry"""
+
     def exec(self, state: RetryState[ReturnT]) -> None:
+        """
+        Executes `func` from `state`
+
+        Args:
+            state: Current retry state
+
+        """
         self._pre_exec(state)
 
         exception: Exception | None = None
@@ -192,6 +320,17 @@ class Retry(BaseRetry[ReturnT]):
     def __call__(
         self, func: FuncT[ReturnT], *args: t.Any, **kwargs: t.Any
     ) -> ReturnT | Exception | None:
+        """
+        Executes `func` and applies strategies
+
+        Args:
+            func: Address to function
+            args: `func` non-positional arguments
+            kwargs: `func` positional arguments
+
+        Returns:
+           Either `func`'s return value or None
+        """
         state = RetryState[ReturnT](
             func=func,
             start_time=int(datetime.now().timestamp()),
@@ -213,6 +352,24 @@ class Retry(BaseRetry[ReturnT]):
 
 
 def retry(strategies: t.Sequence[Strategy]):
+    """
+    Retry decorator. Works both for sync and async functions
+
+    Examples:
+        >>> @retry(strategies=[strategy.NoopStrategy(1)])
+            def ok() -> bool:
+                return True
+        >>> ok()
+        INFO:retries.retry:Calling 'ok'
+        True
+
+    Args:
+        strategies: A sequence of retry strategies
+
+    Returns:
+        func (FuncT[ReturnT]): Functions return value or exception
+    """
+
     def decorator_retry(
         func: FuncT[ReturnT],
     ) -> FuncT[ReturnT]:

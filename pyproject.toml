@@ -17,6 +17,9 @@ flake8 = "^6.1.0"
 pyright = "^1.1.329"
 pytest-asyncio = "^0.21.1"
 pytest-cov = "^4.1.0"
+mkdocs = "^1.5.3"
+mkdocstrings = {version = "^0.23.0", extras = ["python"]}
+mkdocs-material = "^9.4.4"
 
 [build-system]
 requires = ["poetry-core"]

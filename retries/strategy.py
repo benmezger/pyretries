@@ -22,27 +22,69 @@ StrategyValueT = t.TypeVar("StrategyValueT")
 
 
 class Strategy(abc.ABC, t.Generic[StrategyValueT]):
+    """Base Strategy class"""
+
     @abc.abstractproperty
     def should_stop(self) -> bool:
+        """
+        Checks if strategy should apply
+        """
         raise NotImplementedError
 
     @abc.abstractmethod
     def maybe_apply(self, value: StrategyValueT | Exception | None) -> bool:
+        """
+        Checks if strategy should be applied.
+
+        Args:
+            value: `func` Returned value or exception.
+
+        Returns:
+            `True` if it should still be applied in the next iteration
+
+        Raises:
+            RetryStrategyExausted: Raised when strategy is exausted
+        """
         raise NotImplementedError
 
 
 class StopAfterAttemptStrategy(Strategy, t.Generic[StrategyValueT]):
+    """
+    Stop after attempting N times strategy
+    """
+
     def __init__(self, attempts: int) -> None:
+        """
+        Args:
+            attempts: Number of attempts to run
+        """
         self.attempts = attempts
         self.current_attempt = 0
 
     @property
     def should_stop(self) -> bool:
+        """Check if strategy should apply.
+
+        Return:
+            Returns `True` if current attempt if greater or equal to `attempts`
+        """
         if self.current_attempt >= self.attempts:
             return True
         return False
 
     def maybe_apply(self, value: StrategyValueT | Exception | None) -> bool:
+        """
+        Check if strategy should apply.
+
+        Args:
+            value: `func` Returned value or exception.
+
+        Return:
+            Returns `True` if strategy should be applied in the next iteration
+
+        Raises:
+            RetryStrategyExausted: Raised when strategy is exausted
+        """
         if self.should_stop:
             raise RetryStrategyExausted from value if isinstance(
                 value, Exception
@@ -54,18 +96,42 @@ class StopAfterAttemptStrategy(Strategy, t.Generic[StrategyValueT]):
 
 
 class SleepStrategy(Strategy, t.Generic[StrategyValueT]):
+    """Sleep strategy"""
+
     def __init__(self, seconds: float, attempts: int = 1):
+        """
+        Args:
+            seconds: Amount of seconds to sleep
+            attempts: Number of maximum attempts
+        """
         self.seconds = seconds
         self.attempts = attempts
         self.current_attempt = 0
 
     @property
     def should_stop(self) -> bool:
+        """Check if strategy should apply.
+
+        Return:
+            Returns `True` if current attempt if greater or equal to `attempts`
+        """
         if self.current_attempt >= self.attempts:
             return True
         return False
 
     def maybe_apply(self, value: StrategyValueT | Exception | None) -> bool:
+        """
+        Check if strategy should apply.
+
+        Args:
+            value: `func` Returned value or exception.
+
+        Return:
+            Returns `True` if strategy should be applied in the next iteration
+
+        Raises:
+            RetryStrategyExausted: Raised when strategy is exausted
+        """
         if self.should_stop:
             raise RetryStrategyExausted from value if isinstance(
                 value, Exception
@@ -82,17 +148,40 @@ class SleepStrategy(Strategy, t.Generic[StrategyValueT]):
 
 
 class NoopStrategy(Strategy, t.Generic[StrategyValueT]):
+    "Do nothing strategy"
+
     def __init__(self, attempts: int = 1) -> None:
+        """
+        Args:
+            attempts: Number of maximum attempts
+        """
         self.attempts = attempts
         self.current_attempt = 0
 
     @property
     def should_stop(self) -> bool:
+        """Check if strategy should apply.
+
+        Return:
+            Returns `True` if current attempt if greater or equal to `attempts`
+        """
         if self.current_attempt >= self.attempts:
             return True
         return False
 
     def maybe_apply(self, value: StrategyValueT | Exception | None) -> bool:
+        """
+        Check if strategy should apply.
+
+        Args:
+            value: `func` Returned value or exception.
+
+        Return:
+            Returns `True` if strategy should be applied in the next iteration
+
+        Raises:
+            RetryStrategyExausted: Raised when strategy is exausted
+        """
         if self.should_stop:
             raise RetryStrategyExausted from value if isinstance(
                 value, Exception
@@ -103,19 +192,43 @@ class NoopStrategy(Strategy, t.Generic[StrategyValueT]):
 
 
 class StopWhenReturnValueStrategy(Strategy, t.Generic[StrategyValueT]):
+    """Stop when return value is X strategy"""
+
     def __init__(self, expected: t.Any, max_attempts: int | None = None) -> None:
+        """
+        Args:
+            expected: Expected return value
+            max_attempts: Number of maximum attempts. By default it runs forever
+        """
         self.expected = expected
         self.max_attempts = max_attempts
         self.current_attempt = 0
 
     @property
     def should_stop(self) -> bool:
+        """Check if strategy should apply.
+
+        Return:
+            Returns `True` if current attempt if greater or equal to `attempts`
+        """
         if self.max_attempts is not None:
             if self.current_attempt >= self.max_attempts:
                 return True
         return False
 
     def maybe_apply(self, value: StrategyValueT | Exception | None) -> bool:
+        """
+        Check if strategy should apply.
+
+        Args:
+            value: `func` Returned value or exception.
+
+        Return:
+            Returns `True` if strategy should be applied in the next iteration
+
+        Raises:
+            RetryStrategyExausted: Raised when strategy is exausted
+        """
         if self.should_stop:
             raise RetryStrategyExausted from value if isinstance(
                 value, Exception
@@ -131,7 +244,14 @@ class StopWhenReturnValueStrategy(Strategy, t.Generic[StrategyValueT]):
 
 
 class ExponentialBackoffStrategy(Strategy, t.Generic[StrategyValueT]):
+    """Exponential backoff strategy"""
+
     def __init__(self, max_attempts: int, base_delay: float) -> None:
+        """
+        Args:
+            max_attempts: Number of maximum attempts
+            base_delay: base delay in seconds for exponential backoff
+        """
         self.base_delay = base_delay
         self.max_attempts = max_attempts
         self.current_attempt = 0
@@ -139,11 +259,28 @@ class ExponentialBackoffStrategy(Strategy, t.Generic[StrategyValueT]):
 
     @property
     def should_stop(self) -> bool:
+        """Check if strategy should apply.
+
+        Return:
+            Returns `True` if current attempt if greater or equal to `attempts`
+        """
         if self.current_attempt >= self.max_attempts:
             return True
         return False
 
     def maybe_apply(self, value: StrategyValueT | Exception | None) -> bool:
+        """
+        Check if strategy should apply.
+
+        Args:
+            value: `func` Returned value or exception.
+
+        Return:
+            Returns `True` if strategy should be applied in the next iteration
+
+        Raises:
+            RetryStrategyExausted: Raised when strategy is exausted
+        """
         if self.should_stop:
             raise RetryStrategyExausted from value if isinstance(
                 value, Exception
