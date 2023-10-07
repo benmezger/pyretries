@@ -8,6 +8,7 @@ packages = [{include = "pyretries"}]
 homepage = "https://benmezger.github.io/pyretries"
 repository = "https://github.com/benmezger/pyretries"
 documentation = "https://benmezger.github.io/pyretries"
+keywords = ["retry", "python"]
 
 [tool.poetry.dependencies]
 python = "^3.11"
