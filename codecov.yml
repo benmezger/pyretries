@@ -1,0 +1,6 @@
+profiling:
+  critical_files_paths:
+    - pyretries/
+
+comment:
+  show_critical_paths: true

@@ -1,6 +1,7 @@
 # PyRetries
 
 ![Github actions](https://github.com/benmezger/pyretries/actions/workflows/main.yml/badge.svg)
+[![codecov](https://codecov.io/gh/benmezger/pyretries/graph/badge.svg?token=E9gAEDW4qT)](https://codecov.io/gh/benmezger/pyretries)
 
 A retry library for Python. This library allows:
 
