@@ -1,5 +1,26 @@
-# retry
+# PyRetries
 
 ![Github actions](https://github.com/benmezger/pyretries/actions/workflows/main.yml/badge.svg)
 
-Retry library for Python. See [documentation](https://benmezger.github.io/pyretries/) for more information.
+A retry library for Python. This library allows:
+
+1. Creating custom strategies
+1. Applying hooks before and after executing function (useful for custom logging)
+1. Applying hook to when function raised an error (useful for incriminating metrics)
+1. Applying multiple retry strategies
+
+See [documentation](https://benmezger.github.io/pyretries/) for more information.
+
+## Installing
+
+The package is available through [Pypi](https://pypi.org/project/pyretries/). You can install using `pip` or any of your favorite package manager:
+
+```shell
+pip install pyretries
+```
+
+Or using `poetry`
+
+```shell
+poetry add pyretries
+```
