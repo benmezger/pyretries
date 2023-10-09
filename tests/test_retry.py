@@ -261,6 +261,17 @@ class TestAsyncRetry:
         await retry(strategies=[])(_test)()
         assert mock.call_count == 1
 
+    @pytest.mark.asyncio
+    async def test_async_retry_returns_exception(
+        self, async_retry: t.Callable[..., AsyncRetry[t.Any]], async_func: AsyncMock
+    ) -> None:
+        async_func.return_value = ValueError
+
+        retry = async_retry()
+        result = await retry(async_func)
+
+        assert result == ValueError
+
 
 class TestSyncRetry:
     @pytest.fixture
@@ -484,3 +495,13 @@ class TestSyncRetry:
             repr(state)
             == "RetryState(start_time=1, end_time=0, current_attempts=0, exception=ValueError('ABC')), returned_value=1)"
         )
+
+    def test_sync_retry_returns_exception(
+        self, sync_retry: t.Callable[..., Retry[t.Any]], func: MagicMock
+    ) -> None:
+        func.return_value = ValueError
+
+        retry = sync_retry()
+        result = retry(func)
+
+        assert result == ValueError
