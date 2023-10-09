@@ -1,10 +1,10 @@
 on:
   push:
     branches: [main]
-  pull_request:
 
 jobs:
   test:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -38,10 +38,9 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-interaction
 
-      - name: Run check
-        run: poetry run task check
-
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
+      - name: Publish
         env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          poetry config pypi-token.pypi $PYPI_TOKEN
+          poetry publish --build --skip-existing
