@@ -44,7 +44,7 @@ class RetryState(t.Generic[ReturnT]):
     func: FuncT[ReturnT]
     start_time: int
     end_time: int = 0
-    strategy_func: Strategy[ReturnT] | None = None
+    strategy: Strategy[ReturnT] | None = None
     args: t.Sequence[t.Any] | None = None
     kwargs: t.Dict[str, t.Any] | None = None
     current_attempts: int = 0
@@ -155,27 +155,27 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
         Raises:
             RetryExaustedError: Raised when strategy is exausted of no strategy is available
         """
-        if state.strategy_func is None:
+        if state.strategy is None:
             if len(self.strategies):
-                state.strategy_func = self.strategies.pop()
+                state.strategy = self.strategies.pop()
             else:
                 raise RetryExaustedError
 
         try:
-            if state.strategy_func.should_stop:
+            if state.strategy.should_stop:
                 raise RetryStrategyExausted
 
             if self.should_log:
                 _logger.info(
-                    f"Executing '{state.strategy_func.__class__.__name__}' retry strategy. "
+                    f"Executing '{state.strategy.__class__.__name__}' retry strategy. "
                     f"Current attempt {state.current_attempts}"
                 )
 
-            state.strategy_func.maybe_apply(state.returned_value)
+            state.strategy.maybe_apply(state.returned_value)
             state.current_attempts += 1
 
-            if state.strategy_func.should_stop:
-                state.strategy_func = None
+            if state.strategy.should_stop:
+                state.strategy = None
 
         except RetryStrategyExausted:
             raise RetryExaustedError
