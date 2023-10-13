@@ -20,7 +20,7 @@ class TestSleepStrategy:
 
         with pytest.raises(RetryStrategyExausted):
             for _ in range(attempts + 1):
-                s.maybe_apply(None)
+                s.eval(None)
 
         sleep.assert_called_with(seconds)
         assert s.current_attempt == attempts
@@ -29,7 +29,7 @@ class TestSleepStrategy:
         s = strategy.SleepStrategy(1, 0)
 
         with pytest.raises(RetryStrategyExausted) as err:
-            s.maybe_apply(ValueError("Error"))
+            s.eval(ValueError("Error"))
 
         assert isinstance(err.value.__cause__, ValueError)
 
@@ -37,7 +37,7 @@ class TestSleepStrategy:
         s = strategy.SleepStrategy(1, 0)
 
         with pytest.raises(RetryStrategyExausted) as err:
-            s.maybe_apply(None)
+            s.eval(None)
 
         assert err.value.__cause__ == None
 
@@ -75,7 +75,7 @@ class TestExponentialBackoffStrategy:
 
         with pytest.raises(RetryStrategyExausted):
             for _ in range(attempts + 1):
-                s.maybe_apply(None)
+                s.eval(None)
 
         # checks if sleep was called N types with the calculated delay
         assert [call.args[0] for call in sleep.call_args_list] == expected_delays
@@ -85,7 +85,7 @@ class TestExponentialBackoffStrategy:
         s = strategy.ExponentialBackoffStrategy(0, 1)
 
         with pytest.raises(RetryStrategyExausted) as err:
-            s.maybe_apply(ValueError("Error"))
+            s.eval(ValueError("Error"))
 
         assert isinstance(err.value.__cause__, ValueError)
 
@@ -93,7 +93,7 @@ class TestExponentialBackoffStrategy:
         s = strategy.ExponentialBackoffStrategy(0, 0)
 
         with pytest.raises(RetryStrategyExausted) as err:
-            s.maybe_apply(None)
+            s.eval(None)
 
         assert err.value.__cause__ == None
 
@@ -106,7 +106,7 @@ class TestStopAfterAttempt:
 
         with pytest.raises(RetryStrategyExausted):
             for _ in range(attempts + 1):
-                s.maybe_apply(None)
+                s.eval(None)
 
         assert s.current_attempt == attempts
 
@@ -114,7 +114,7 @@ class TestStopAfterAttempt:
         s = strategy.StopAfterAttemptStrategy(0)
 
         with pytest.raises(RetryStrategyExausted) as err:
-            s.maybe_apply(ValueError("Error"))
+            s.eval(ValueError("Error"))
 
         assert isinstance(err.value.__cause__, ValueError)
 
@@ -122,7 +122,7 @@ class TestStopAfterAttempt:
         s = strategy.StopAfterAttemptStrategy(0)
 
         with pytest.raises(RetryStrategyExausted) as err:
-            s.maybe_apply(None)
+            s.eval(None)
 
         assert err.value.__cause__ == None
 
@@ -133,7 +133,7 @@ class TestWhenReturnValueIs:
         s = strategy.StopWhenReturnValueStrategy(expected=attempts, max_attempts=2)
         assert s.current_attempt == 0
 
-        assert s.maybe_apply(attempts) is False
+        assert s.eval(attempts) is False
         assert s.current_attempt == 1
 
     def test_raises_when_max_attempts(self):
@@ -141,7 +141,7 @@ class TestWhenReturnValueIs:
 
         with pytest.raises(RetryStrategyExausted) as err:
             for _ in range(3):
-                s.maybe_apply(1)
+                s.eval(1)
 
         assert err.value.__cause__ == None
 
@@ -154,7 +154,7 @@ class TestNopStrategy:
 
         with pytest.raises(RetryStrategyExausted) as err:
             for _ in range(attempts + 1):
-                s.maybe_apply(1)
+                s.eval(1)
 
         assert s.current_attempt == attempts
         assert err.value.__cause__ == None

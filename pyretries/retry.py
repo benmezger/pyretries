@@ -171,7 +171,7 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
                     f"Current attempt {state.current_attempts}"
                 )
 
-            state.strategy.maybe_apply(state.returned_value)
+            state.strategy.eval(state.returned_value)
             state.current_attempts += 1
 
             if state.strategy.should_stop:
