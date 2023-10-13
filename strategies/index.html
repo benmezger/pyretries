@@ -285,8 +285,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pyretries.strategy.ExponentialBackoffStrategy.maybe_apply" class="md-nav__link">
-    maybe_apply()
+  <a href="#pyretries.strategy.ExponentialBackoffStrategy.eval" class="md-nav__link">
+    eval()
   </a>
   
 </li>
@@ -319,8 +319,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pyretries.strategy.NoopStrategy.maybe_apply" class="md-nav__link">
-    maybe_apply()
+  <a href="#pyretries.strategy.NoopStrategy.eval" class="md-nav__link">
+    eval()
   </a>
   
 </li>
@@ -353,8 +353,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pyretries.strategy.SleepStrategy.maybe_apply" class="md-nav__link">
-    maybe_apply()
+  <a href="#pyretries.strategy.SleepStrategy.eval" class="md-nav__link">
+    eval()
   </a>
   
 </li>
@@ -387,8 +387,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pyretries.strategy.StopAfterAttemptStrategy.maybe_apply" class="md-nav__link">
-    maybe_apply()
+  <a href="#pyretries.strategy.StopAfterAttemptStrategy.eval" class="md-nav__link">
+    eval()
   </a>
   
 </li>
@@ -421,8 +421,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pyretries.strategy.StopWhenReturnValueStrategy.maybe_apply" class="md-nav__link">
-    maybe_apply()
+  <a href="#pyretries.strategy.StopWhenReturnValueStrategy.eval" class="md-nav__link">
+    eval()
   </a>
   
 </li>
@@ -448,8 +448,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pyretries.strategy.Strategy.maybe_apply" class="md-nav__link">
-    maybe_apply()
+  <a href="#pyretries.strategy.Strategy.eval" class="md-nav__link">
+    eval()
   </a>
   
 </li>
@@ -530,8 +530,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pyretries.strategy.ExponentialBackoffStrategy.maybe_apply" class="md-nav__link">
-    maybe_apply()
+  <a href="#pyretries.strategy.ExponentialBackoffStrategy.eval" class="md-nav__link">
+    eval()
   </a>
   
 </li>
@@ -564,8 +564,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pyretries.strategy.NoopStrategy.maybe_apply" class="md-nav__link">
-    maybe_apply()
+  <a href="#pyretries.strategy.NoopStrategy.eval" class="md-nav__link">
+    eval()
   </a>
   
 </li>
@@ -598,8 +598,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pyretries.strategy.SleepStrategy.maybe_apply" class="md-nav__link">
-    maybe_apply()
+  <a href="#pyretries.strategy.SleepStrategy.eval" class="md-nav__link">
+    eval()
   </a>
   
 </li>
@@ -632,8 +632,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pyretries.strategy.StopAfterAttemptStrategy.maybe_apply" class="md-nav__link">
-    maybe_apply()
+  <a href="#pyretries.strategy.StopAfterAttemptStrategy.eval" class="md-nav__link">
+    eval()
   </a>
   
 </li>
@@ -666,8 +666,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pyretries.strategy.StopWhenReturnValueStrategy.maybe_apply" class="md-nav__link">
-    maybe_apply()
+  <a href="#pyretries.strategy.StopWhenReturnValueStrategy.eval" class="md-nav__link">
+    eval()
   </a>
   
 </li>
@@ -693,8 +693,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pyretries.strategy.Strategy.maybe_apply" class="md-nav__link">
-    maybe_apply()
+  <a href="#pyretries.strategy.Strategy.eval" class="md-nav__link">
+    eval()
   </a>
   
 </li>
@@ -851,9 +851,9 @@
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="nf">maybe_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check if strategy should apply.</span>
+<span class="sd">        Evaluates strategy.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            value: `func` Returned value or exception.</span>
@@ -1031,15 +1031,15 @@
 
 
 
-<h3 id="pyretries.strategy.ExponentialBackoffStrategy.maybe_apply" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">maybe_apply</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></code>
+<h3 id="pyretries.strategy.ExponentialBackoffStrategy.eval" class="doc doc-heading">
+          <code class="highlight language-python"><span class="nb">eval</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></code>
 
 </h3>
 
 
   <div class="doc doc-contents ">
   
-      <p>Check if strategy should apply.</p>
+      <p>Evaluates strategy.</p>
 
 
 
@@ -1129,9 +1129,9 @@
 <span class="normal">320</span>
 <span class="normal">321</span>
 <span class="normal">322</span>
-<span class="normal">323</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">maybe_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">323</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Check if strategy should apply.</span>
+<span class="sd">    Evaluates strategy.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        value: `func` Returned value or exception.</span>
@@ -1260,9 +1260,9 @@
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="nf">maybe_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check if strategy should apply.</span>
+<span class="sd">        Evaluates strategy.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            value: `func` Returned value or exception.</span>
@@ -1411,15 +1411,15 @@
 
 
 
-<h3 id="pyretries.strategy.NoopStrategy.maybe_apply" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">maybe_apply</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></code>
+<h3 id="pyretries.strategy.NoopStrategy.eval" class="doc doc-heading">
+          <code class="highlight language-python"><span class="nb">eval</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></code>
 
 </h3>
 
 
   <div class="doc doc-contents ">
   
-      <p>Check if strategy should apply.</p>
+      <p>Evaluates strategy.</p>
 
 
 
@@ -1500,9 +1500,9 @@
 <span class="normal">205</span>
 <span class="normal">206</span>
 <span class="normal">207</span>
-<span class="normal">208</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">maybe_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">208</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Check if strategy should apply.</span>
+<span class="sd">    Evaluates strategy.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        value: `func` Returned value or exception.</span>
@@ -1634,9 +1634,9 @@
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="nf">maybe_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check if strategy should apply.</span>
+<span class="sd">        Evaluates strategy.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            value: `func` Returned value or exception.</span>
@@ -1811,15 +1811,15 @@
 
 
 
-<h3 id="pyretries.strategy.SleepStrategy.maybe_apply" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">maybe_apply</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></code>
+<h3 id="pyretries.strategy.SleepStrategy.eval" class="doc doc-heading">
+          <code class="highlight language-python"><span class="nb">eval</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></code>
 
 </h3>
 
 
   <div class="doc doc-contents ">
   
-      <p>Check if strategy should apply.</p>
+      <p>Evaluates strategy.</p>
 
 
 
@@ -1908,9 +1908,9 @@
 <span class="normal">159</span>
 <span class="normal">160</span>
 <span class="normal">161</span>
-<span class="normal">162</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">maybe_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">162</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Check if strategy should apply.</span>
+<span class="sd">    Evaluates strategy.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        value: `func` Returned value or exception.</span>
@@ -2045,9 +2045,9 @@
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="nf">maybe_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check if strategy should apply.</span>
+<span class="sd">        Evaluates strategy.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            value: `func` Returned value or exception.</span>
@@ -2199,15 +2199,15 @@
 
 
 
-<h3 id="pyretries.strategy.StopAfterAttemptStrategy.maybe_apply" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">maybe_apply</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></code>
+<h3 id="pyretries.strategy.StopAfterAttemptStrategy.eval" class="doc doc-heading">
+          <code class="highlight language-python"><span class="nb">eval</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></code>
 
 </h3>
 
 
   <div class="doc doc-contents ">
   
-      <p>Check if strategy should apply.</p>
+      <p>Evaluates strategy.</p>
 
 
 
@@ -2291,9 +2291,9 @@
 <span class="normal">103</span>
 <span class="normal">104</span>
 <span class="normal">105</span>
-<span class="normal">106</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">maybe_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">106</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Check if strategy should apply.</span>
+<span class="sd">    Evaluates strategy.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        value: `func` Returned value or exception.</span>
@@ -2432,9 +2432,9 @@
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="nf">maybe_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check if strategy should apply.</span>
+<span class="sd">        Evaluates strategy.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            value: `func` Returned value or exception.</span>
@@ -2611,15 +2611,15 @@
 
 
 
-<h3 id="pyretries.strategy.StopWhenReturnValueStrategy.maybe_apply" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">maybe_apply</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></code>
+<h3 id="pyretries.strategy.StopWhenReturnValueStrategy.eval" class="doc doc-heading">
+          <code class="highlight language-python"><span class="nb">eval</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></code>
 
 </h3>
 
 
   <div class="doc doc-contents ">
   
-      <p>Check if strategy should apply.</p>
+      <p>Evaluates strategy.</p>
 
 
 
@@ -2706,9 +2706,9 @@
 <span class="normal">262</span>
 <span class="normal">263</span>
 <span class="normal">264</span>
-<span class="normal">265</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">maybe_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">265</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Check if strategy should apply.</span>
+<span class="sd">    Evaluates strategy.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        value: `func` Returned value or exception.</span>
@@ -2816,9 +2816,9 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span> <span class="nf">maybe_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Checks if strategy should be applied.</span>
+<span class="sd">        Evaluates strategy.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            value: `func` Returned value or exception.</span>
@@ -2915,8 +2915,8 @@
 
 
 
-<h3 id="pyretries.strategy.Strategy.maybe_apply" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">maybe_apply</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></code>
+<h3 id="pyretries.strategy.Strategy.eval" class="doc doc-heading">
+          <code class="highlight language-python"><span class="nb">eval</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></code>
   
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-abstractmethod"><code>abstractmethod</code></small>
@@ -2927,7 +2927,7 @@
 
   <div class="doc doc-contents ">
   
-      <p>Checks if strategy should be applied.</p>
+      <p>Evaluates strategy.</p>
 
 
 
@@ -3024,9 +3024,9 @@
 <span class="normal">53</span>
 <span class="normal">54</span>
 <span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-<span class="k">def</span> <span class="nf">maybe_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">StrategyValueT</span> <span class="o">|</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Checks if strategy should be applied.</span>
+<span class="sd">    Evaluates strategy.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        value: `func` Returned value or exception.</span>

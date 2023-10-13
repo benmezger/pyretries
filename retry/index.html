@@ -1364,27 +1364,27 @@ Requires <code>__call__</code> implementation</p>
 <span class="sd">        Raises:</span>
 <span class="sd">            RetryExaustedError: Raised when strategy is exausted of no strategy is available</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">strategy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">strategies</span><span class="p">):</span>
-                <span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategies</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                <span class="n">state</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategies</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">RetryExaustedError</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span><span class="o">.</span><span class="n">should_stop</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">strategy</span><span class="o">.</span><span class="n">should_stop</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">RetryStrategyExausted</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_log</span><span class="p">:</span>
                 <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Executing &#39;</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; retry strategy. &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Executing &#39;</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">strategy</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; retry strategy. &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;Current attempt </span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">current_attempts</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
 
-            <span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span><span class="o">.</span><span class="n">maybe_apply</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">returned_value</span><span class="p">)</span>
+            <span class="n">state</span><span class="o">.</span><span class="n">strategy</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">returned_value</span><span class="p">)</span>
             <span class="n">state</span><span class="o">.</span><span class="n">current_attempts</span> <span class="o">+=</span> <span class="mi">1</span>
 
-            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span><span class="o">.</span><span class="n">should_stop</span><span class="p">:</span>
-                <span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">strategy</span><span class="o">.</span><span class="n">should_stop</span><span class="p">:</span>
+                <span class="n">state</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">except</span> <span class="n">RetryStrategyExausted</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">RetryExaustedError</span>
@@ -1999,27 +1999,27 @@ Requires <code>__call__</code> implementation</p>
 <span class="sd">    Raises:</span>
 <span class="sd">        RetryExaustedError: Raised when strategy is exausted of no strategy is available</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">strategy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">strategies</span><span class="p">):</span>
-            <span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategies</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="n">state</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategies</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">RetryExaustedError</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span><span class="o">.</span><span class="n">should_stop</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">strategy</span><span class="o">.</span><span class="n">should_stop</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">RetryStrategyExausted</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_log</span><span class="p">:</span>
             <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Executing &#39;</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; retry strategy. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Executing &#39;</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">strategy</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; retry strategy. &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;Current attempt </span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">current_attempts</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
 
-        <span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span><span class="o">.</span><span class="n">maybe_apply</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">returned_value</span><span class="p">)</span>
+        <span class="n">state</span><span class="o">.</span><span class="n">strategy</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">returned_value</span><span class="p">)</span>
         <span class="n">state</span><span class="o">.</span><span class="n">current_attempts</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span><span class="o">.</span><span class="n">should_stop</span><span class="p">:</span>
-            <span class="n">state</span><span class="o">.</span><span class="n">strategy_func</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">strategy</span><span class="o">.</span><span class="n">should_stop</span><span class="p">:</span>
+            <span class="n">state</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">except</span> <span class="n">RetryStrategyExausted</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">RetryExaustedError</span>
@@ -2657,7 +2657,6 @@ Requires <code>__call__</code> implementation</p>
         <tr>
           <td><code>strategy_func</code></td>
           <td>
-                <code><a class="autorefs autorefs-internal" title="pyretries.strategy.Strategy" href="../strategies/#pyretries.strategy.Strategy">Strategy</a>[<span title="pyretries.retry.ReturnT">ReturnT</span>] | None</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -2665,7 +2664,7 @@ Requires <code>__call__</code> implementation</p>
             </div>
           </td>
           <td>
-                <code>None</code>
+              <em>required</em>
           </td>
         </tr>
         <tr>
@@ -2764,7 +2763,7 @@ Requires <code>__call__</code> implementation</p>
     <span class="n">func</span><span class="p">:</span> <span class="n">FuncT</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]</span>
     <span class="n">start_time</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">end_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">strategy_func</span><span class="p">:</span> <span class="n">Strategy</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">strategy</span><span class="p">:</span> <span class="n">Strategy</span><span class="p">[</span><span class="n">ReturnT</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">args</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">kwargs</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">current_attempts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
