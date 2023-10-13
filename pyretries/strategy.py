@@ -39,9 +39,9 @@ class Strategy(abc.ABC, t.Generic[StrategyValueT]):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def maybe_apply(self, value: StrategyValueT | Exception | None) -> bool:
+    def eval(self, value: StrategyValueT | Exception | None) -> bool:
         """
-        Checks if strategy should be applied.
+        Evaluates strategy.
 
         Args:
             value: `func` Returned value or exception.
@@ -81,9 +81,9 @@ class StopAfterAttemptStrategy(Strategy, t.Generic[StrategyValueT]):
             return True
         return False
 
-    def maybe_apply(self, value: StrategyValueT | Exception | None) -> bool:
+    def eval(self, value: StrategyValueT | Exception | None) -> bool:
         """
-        Check if strategy should apply.
+        Evaluates strategy.
 
         Args:
             value: `func` Returned value or exception.
@@ -132,9 +132,9 @@ class SleepStrategy(Strategy, t.Generic[StrategyValueT]):
             return True
         return False
 
-    def maybe_apply(self, value: StrategyValueT | Exception | None) -> bool:
+    def eval(self, value: StrategyValueT | Exception | None) -> bool:
         """
-        Check if strategy should apply.
+        Evaluates strategy.
 
         Args:
             value: `func` Returned value or exception.
@@ -186,9 +186,9 @@ class NoopStrategy(Strategy, t.Generic[StrategyValueT]):
             return True
         return False
 
-    def maybe_apply(self, value: StrategyValueT | Exception | None) -> bool:
+    def eval(self, value: StrategyValueT | Exception | None) -> bool:
         """
-        Check if strategy should apply.
+        Evaluates strategy.
 
         Args:
             value: `func` Returned value or exception.
@@ -237,9 +237,9 @@ class StopWhenReturnValueStrategy(Strategy, t.Generic[StrategyValueT]):
                 return True
         return False
 
-    def maybe_apply(self, value: StrategyValueT | Exception | None) -> bool:
+    def eval(self, value: StrategyValueT | Exception | None) -> bool:
         """
-        Check if strategy should apply.
+        Evaluates strategy.
 
         Args:
             value: `func` Returned value or exception.
@@ -292,9 +292,9 @@ class ExponentialBackoffStrategy(Strategy, t.Generic[StrategyValueT]):
             return True
         return False
 
-    def maybe_apply(self, value: StrategyValueT | Exception | None) -> bool:
+    def eval(self, value: StrategyValueT | Exception | None) -> bool:
         """
-        Check if strategy should apply.
+        Evaluates strategy.
 
         Args:
             value: `func` Returned value or exception.
