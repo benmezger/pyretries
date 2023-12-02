@@ -6,7 +6,11 @@ updates:
       interval: "daily"
     labels:
       - "dependencies"
-
+    reviewers:
+      - "benmezger"
+    assignees:
+      - "benmezger"
+    
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -14,3 +18,7 @@ updates:
     labels:
       - "dependencies"
       - "workflow"
+    reviewers:
+      - "benmezger"
+    assignees:
+      - "benmezger"
