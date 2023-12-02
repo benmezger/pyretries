@@ -8,6 +8,8 @@ updates:
       - "dependencies"
     reviewers:
       - "benmezger"
+    assignees:
+      - "benmezger"
     
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -17,4 +19,6 @@ updates:
       - "dependencies"
       - "workflow"
     reviewers:
+      - "benmezger"
+    assignees:
       - "benmezger"
