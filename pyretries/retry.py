@@ -275,7 +275,10 @@ class AsyncRetry(BaseRetry[ReturnT]):
 
         self._post_exec(state, exception)
 
-    async def __call__(
+    # NOTE: currently, the abtract method is a sync, and here we are defining async.
+    # Pyright will alert about this, so we ignore the type for now until we
+    # have a fix for it
+    async def __call__(  # type:ignore
         self, func: FuncT[ReturnT], *args: t.Any, **kwargs: t.Any
     ) -> ReturnT | Exception | None:
         """
