@@ -95,9 +95,9 @@ class StopAfterAttemptStrategy(Strategy, t.Generic[StrategyValueT]):
             RetryStrategyExausted: Raised when strategy is exausted
         """
         if self.should_stop:
-            raise RetryStrategyExausted from value if isinstance(
-                value, Exception
-            ) else None
+            raise RetryStrategyExausted from (
+                value if isinstance(value, Exception) else None
+            )
 
         if self.should_log:
             _logger.info(f"{self.__class__.__name__} is at {self.current_attempt=}")
@@ -146,9 +146,9 @@ class SleepStrategy(Strategy, t.Generic[StrategyValueT]):
             RetryStrategyExausted: Raised when strategy is exausted
         """
         if self.should_stop:
-            raise RetryStrategyExausted from value if isinstance(
-                value, Exception
-            ) else None
+            raise RetryStrategyExausted from (
+                value if isinstance(value, Exception) else None
+            )
 
         self.current_attempt += 1
 
@@ -200,9 +200,9 @@ class NoopStrategy(Strategy, t.Generic[StrategyValueT]):
             RetryStrategyExausted: Raised when strategy is exausted
         """
         if self.should_stop:
-            raise RetryStrategyExausted from value if isinstance(
-                value, Exception
-            ) else None
+            raise RetryStrategyExausted from (
+                value if isinstance(value, Exception) else None
+            )
 
         self.current_attempt += 1
         return True
@@ -251,9 +251,9 @@ class StopWhenReturnValueStrategy(Strategy, t.Generic[StrategyValueT]):
             RetryStrategyExausted: Raised when strategy is exausted
         """
         if self.should_stop:
-            raise RetryStrategyExausted from value if isinstance(
-                value, Exception
-            ) else None
+            raise RetryStrategyExausted from (
+                value if isinstance(value, Exception) else None
+            )
 
         if self.max_attempts is not None:
             if self.should_log:
@@ -306,9 +306,9 @@ class ExponentialBackoffStrategy(Strategy, t.Generic[StrategyValueT]):
             RetryStrategyExausted: Raised when strategy is exausted
         """
         if self.should_stop:
-            raise RetryStrategyExausted from value if isinstance(
-                value, Exception
-            ) else None
+            raise RetryStrategyExausted from (
+                value if isinstance(value, Exception) else None
+            )
 
         self.current_attempt += 1
         self.delay = self.base_delay * 2**self.current_attempt + random.uniform(0, 1)
