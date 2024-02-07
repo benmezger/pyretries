@@ -255,8 +255,7 @@ class TestAsyncRetry:
     async def test_retry_async_decorator(self, monkeypatch) -> None:
         monkeypatch.setattr(AsyncRetry, "__call__", mock := AsyncMock())
 
-        async def _test():
-            ...
+        async def _test(): ...
 
         await retry(strategies=[])(_test)()
         assert mock.call_count == 1
