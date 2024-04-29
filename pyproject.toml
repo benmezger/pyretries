@@ -25,7 +25,7 @@ pyright = "^1.1.330.post0"
 pytest-asyncio = "^0.23.4"
 pytest-cov = ">=4.1,<6.0"
 mkdocs = "^1.5.3"
-mkdocstrings = {version = ">=0.23,<0.25", extras = ["python"]}
+mkdocstrings = {version = ">=0.23,<0.26", extras = ["python"]}
 mkdocs-material = "^9.4.4"
 freezegun = "^1.2.2"
 taskipy = "^1.12.0"
