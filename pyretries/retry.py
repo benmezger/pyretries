@@ -136,7 +136,7 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
         """
         raise NotImplementedError
 
-    def save_state(self, state: RetryState[ReturnT]) -> None:
+    def _save_state(self, state: RetryState[ReturnT]) -> None:
         """
         Saves retry state to `func`
 
@@ -145,7 +145,7 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
         """
         setattr(state.func, "state", state)
 
-    def exec_strategy(self, state: RetryState[ReturnT]):
+    def _exec_strategy(self, state: RetryState[ReturnT]):
         """
         Applies user defined strategies.
 
@@ -180,7 +180,7 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
         except RetryStrategyExausted:
             raise RetryExaustedError
 
-    def apply(self, state: RetryState[ReturnT]) -> bool:
+    def _apply(self, state: RetryState[ReturnT]) -> bool:
         """
         Checks if last state raised an exception and executes the next available strategy
 
@@ -200,7 +200,7 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
             if (exc := state.exception.__class__) not in (self.on_exceptions or [exc]):
                 raise RetryExaustedError from state.exception
 
-            self.exec_strategy(state)
+            self._exec_strategy(state)
             state.clear()
             return True
 
@@ -251,7 +251,7 @@ class AsyncRetry(BaseRetry[ReturnT]):
         >>> print(await retry(ok))
     """
 
-    async def exec(self, state: RetryState[ReturnT]) -> None:
+    async def _exec(self, state: RetryState[ReturnT]) -> None:
         """
         Executes `func` from `state`
 
@@ -304,12 +304,12 @@ class AsyncRetry(BaseRetry[ReturnT]):
 
         should_reapply = True
         while should_reapply:
-            await self.exec(state)
+            await self._exec(state)
 
-            if not (should_reapply := self.apply(state)):
+            if not (should_reapply := self._apply(state)):
                 break
 
-        self.save_state(state)
+        self._save_state(state)
         return state.returned_value
 
 
@@ -372,10 +372,10 @@ class Retry(BaseRetry[ReturnT]):
         while should_reapply:
             self.exec(state)
 
-            if not (should_reapply := self.apply(state)):
+            if not (should_reapply := self._apply(state)):
                 break
 
-        self.save_state(state)
+        self._save_state(state)
         return state.returned_value
 
 
