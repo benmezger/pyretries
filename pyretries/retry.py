@@ -411,7 +411,7 @@ def retry(
     """
 
     def decorator_retry(
-        func: FuncT[ReturnT],
+        func: FuncT[t.Any],
     ) -> FuncT[ReturnT]:
         @functools.wraps(func)
         def wrapper_retry(*args, **kwargs):
