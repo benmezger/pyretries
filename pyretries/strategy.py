@@ -39,7 +39,7 @@ class Strategy(abc.ABC, t.Generic[StrategyValueT]):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def eval(self, value: StrategyValueT | Exception | None) -> bool:
+    def eval(self, value: StrategyValueT | Exception | None):
         """
         Evaluates strategy.
 
@@ -81,7 +81,7 @@ class StopAfterAttemptStrategy(Strategy, t.Generic[StrategyValueT]):
             return True
         return False
 
-    def eval(self, value: StrategyValueT | Exception | None) -> bool:
+    def eval(self, value: StrategyValueT | Exception | None):
         """
         Evaluates strategy.
 
@@ -103,7 +103,6 @@ class StopAfterAttemptStrategy(Strategy, t.Generic[StrategyValueT]):
             _logger.info(f"{self.__class__.__name__} is at {self.current_attempt=}")
 
         self.current_attempt += 1
-        return True
 
 
 class SleepStrategy(Strategy, t.Generic[StrategyValueT]):
@@ -132,7 +131,7 @@ class SleepStrategy(Strategy, t.Generic[StrategyValueT]):
             return True
         return False
 
-    def eval(self, value: StrategyValueT | Exception | None) -> bool:
+    def eval(self, value: StrategyValueT | Exception | None):
         """
         Evaluates strategy.
 
@@ -159,8 +158,6 @@ class SleepStrategy(Strategy, t.Generic[StrategyValueT]):
             )
         time.sleep(self.seconds)
 
-        return True
-
 
 class NoopStrategy(Strategy, t.Generic[StrategyValueT]):
     "Do nothing strategy"
@@ -186,7 +183,7 @@ class NoopStrategy(Strategy, t.Generic[StrategyValueT]):
             return True
         return False
 
-    def eval(self, value: StrategyValueT | Exception | None) -> bool:
+    def eval(self, value: StrategyValueT | Exception | None):
         """
         Evaluates strategy.
 
@@ -205,7 +202,6 @@ class NoopStrategy(Strategy, t.Generic[StrategyValueT]):
             )
 
         self.current_attempt += 1
-        return True
 
 
 class StopWhenReturnValueStrategy(Strategy, t.Generic[StrategyValueT]):
@@ -237,7 +233,7 @@ class StopWhenReturnValueStrategy(Strategy, t.Generic[StrategyValueT]):
                 return True
         return False
 
-    def eval(self, value: StrategyValueT | Exception | None) -> bool:
+    def eval(self, value: StrategyValueT | Exception | None):
         """
         Evaluates strategy.
 
@@ -261,8 +257,6 @@ class StopWhenReturnValueStrategy(Strategy, t.Generic[StrategyValueT]):
                     f"{self.__class__.__name__} is at {self.current_attempt}/{self.max_attempts}."
                 )
             self.current_attempt += 1
-
-        return not value == self.expected
 
 
 class ExponentialBackoffStrategy(Strategy, t.Generic[StrategyValueT]):
@@ -292,7 +286,7 @@ class ExponentialBackoffStrategy(Strategy, t.Generic[StrategyValueT]):
             return True
         return False
 
-    def eval(self, value: StrategyValueT | Exception | None) -> bool:
+    def eval(self, value: StrategyValueT | Exception | None):
         """
         Evaluates strategy.
 
@@ -320,4 +314,3 @@ class ExponentialBackoffStrategy(Strategy, t.Generic[StrategyValueT]):
             )
 
         time.sleep(self.delay)
-        return True

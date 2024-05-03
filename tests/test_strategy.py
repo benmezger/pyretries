@@ -133,7 +133,7 @@ class TestWhenReturnValueIs:
         s = strategy.StopWhenReturnValueStrategy(expected=attempts, max_attempts=2)
         assert s.current_attempt == 0
 
-        assert s.eval(attempts) is False
+        s.eval(attempts)
         assert s.current_attempt == 1
 
     def test_raises_when_max_attempts(self):
