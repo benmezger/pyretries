@@ -143,7 +143,7 @@ class BaseRetry(abc.ABC, t.Generic[ReturnT]):
         Args:
             state: Current retry state
         """
-        setattr(state.func, "state", state)
+        setattr(state.func, "retry_state", state)
 
     def _exec_strategy(self, state: RetryState[ReturnT]):
         """

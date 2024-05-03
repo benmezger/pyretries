@@ -84,7 +84,7 @@ class TestAsyncRetry:
         retry = async_retry()
         await retry(async_func)
 
-        state: RetryState = async_func.state
+        state: RetryState = async_func.retry_state
         state.returned_value = 4
 
         assert state.start_time == 1326542401
@@ -331,7 +331,7 @@ class TestSyncRetry:
         retry = sync_retry()
         retry(func)
 
-        state: RetryState = func.state
+        state: RetryState = func.retry_state
         state.returned_value = 4
 
         assert state.start_time == 1326542401
